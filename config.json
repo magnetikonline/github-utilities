@@ -1,0 +1,5 @@
+{
+	"auth_token": "AUTH_TOKEN",
+	"dry_run": true,
+	"repository_type": "owner"
+}
