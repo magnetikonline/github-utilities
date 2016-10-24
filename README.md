@@ -21,6 +21,7 @@ Random scripts for working with GitHub itself and repositories. All designed to 
 
 ## Configuration
 All settings contained in a single [`config.json`](config.json). A breakdown of each setting follows - all of which are mandatory:
-- `auth_token` - a valid GitHub token ID, generated via the [Personal access token](https://github.com/settings/tokens) page. Token requires full access to the `repo` scope and it's sub-scopes.
+- `auth_token` - a valid GitHub token ID, generated via the [Personal access token](https://github.com/settings/tokens) page. Token requires full access to the `repo` scope and it's sub-scopes. For example:
+	![Personal access token permissions](http://i.imgur.com/m12VszH.png)
 - `dry_run` - boolean which determines if scripts should update/correct found issues where possible. If set `true` will only *report* issues without update or change.
 - `repository_type` - where a list of repositories is obtained, the association to to user. Valid values [are listed here](https://developer.github.com/v3/repos/#list-your-repositories) with the default of `owner` more than likely what you're after.
