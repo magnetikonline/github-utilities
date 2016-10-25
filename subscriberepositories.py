@@ -44,7 +44,7 @@ def set_respository_subscription(auth_token,repository_full_name):
 		)
 
 	except githubapi.APIRequestError as e:
-		common.github_exit_error('Unable to set subscription for repository {0}/{1}'.format(owner,repository),e)
+		common.github_exit_error('Unable to set subscription for repository {0}/{1}.'.format(owner,repository),e)
 
 def main():
 	# load config from file

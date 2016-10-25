@@ -52,7 +52,7 @@ def disable_respository_wiki(auth_token,repository_full_name):
 		)
 
 	except githubapi.APIRequestError as e:
-		common.github_exit_error('Unable to disable wiki for repository {0}/{1}'.format(owner,repository),e)
+		common.github_exit_error('Unable to disable wiki for repository {0}/{1}.'.format(owner,repository),e)
 
 def main():
 	# load config from file

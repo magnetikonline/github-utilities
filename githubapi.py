@@ -43,7 +43,7 @@ def make_request(
 		request_header_collection['Authorization'] = REQUEST_TOKEN.format(auth_token)
 
 	if (method is None):
-		# standard GET method
+		# GET method
 		# add request parameters as URL querystring items
 		if (parameter_collection is not None):
 			request_url = '{0}?{1}'.format(
@@ -57,7 +57,7 @@ def make_request(
 		)
 
 	else:
-		# custom methods (POST/PATCH/PUT/DELETE)
+		# other methods (POST/PATCH/PUT/DELETE)
 		data_send = None
 
 		if (parameter_collection is not None):
@@ -101,7 +101,7 @@ def make_request_paged(
 	item_processor = None
 ):
 	# init initial request page
-	current_page = 1
+	request_page = 1
 	active = True
 
 	# set a default item processor function, if none given
@@ -116,7 +116,7 @@ def make_request_paged(
 		# build paging parameters - merged with base request parameters
 		parameter_paging_list = parameter_collection.copy()
 		parameter_paging_list.update(
-			page = current_page,
+			page = request_page,
 			per_page = REQUEST_PAGE_SIZE
 		)
 
@@ -133,13 +133,23 @@ def make_request_paged(
 			yield response_item
 
 		# increment current page for next call
-		current_page = current_page + 1
+		request_page = request_page + 1
 
 # info: https://developer.github.com/v3/repos/#list-your-repositories
 def get_user_repository_list(auth_token,repository_type):
 	return make_request_paged(
 		auth_token,
 		'user/repos',
+		parameter_collection = {
+			'type': repository_type
+		}
+	)
+
+# info: https://developer.github.com/v3/repos/#list-organization-repositories
+def get_organization_repository_list(auth_token,organization_name,repository_type):
+	return make_request_paged(
+		auth_token,
+		'orgs/{0}/repos'.format(organization_name),
 		parameter_collection = {
 			'type': repository_type
 		}

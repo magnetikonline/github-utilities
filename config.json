@@ -1,5 +1,6 @@
 {
 	"auth_token": "AUTH_TOKEN",
 	"dry_run": true,
+	"organization": "",
 	"repository_type": "owner"
 }
