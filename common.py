@@ -44,10 +44,12 @@ def load_config(config_key_addition_set = set()):
 	config_data_return = {}
 	for config_key,config_value in config_data.items():
 		config_key = str(config_key)
-		config_value = str(config_value)
 
-		if (config_key == 'dry_run'):
+		if (config_key in {'dry_run'}):
 			config_value = bool(config_value)
+
+		else:
+			config_value = str(config_value)
 
 		config_data_return[config_key] = config_value
 
