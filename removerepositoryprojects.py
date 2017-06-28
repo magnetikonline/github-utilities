@@ -4,13 +4,13 @@ import common
 import githubapi
 
 
-def get_repository_name_wiki_status_set(auth_token,repository_type,repository_filter):
+def get_repository_name_projects_status_set(auth_token,repository_type,repository_filter):
 	repository_set = set()
 
 	try:
 		for repository_item in githubapi.get_user_repository_list(auth_token,repository_type):
 			repository_name = repository_item['full_name']
-			has_wiki = repository_item['has_wiki']
+			has_projects = repository_item['has_projects']
 
 			# include/exclude repository?
 			if (not repository_filter.accept(repository_name)):
@@ -19,13 +19,13 @@ def get_repository_name_wiki_status_set(auth_token,repository_type,repository_fi
 			# display name and projects status
 			print('{0}{1}'.format(
 				repository_name,
-				' - Wiki enabled' if (has_wiki) else ''
+				' - Projects enabled' if (has_projects) else ''
 			))
 
 			# add to set
 			repository_set.add((
 				repository_name,
-				has_wiki
+				has_projects
 			))
 
 	except githubapi.APIRequestError as e:
@@ -33,18 +33,18 @@ def get_repository_name_wiki_status_set(auth_token,repository_type,repository_fi
 
 	return repository_set
 
-def filter_repository_wiki_enabled(repository_set):
+def filter_repository_projects_enabled(repository_set):
 	def evaluator(filter_set,item):
-		# add item to reduced set if wiki enabled
-		repository_name,has_wiki = item
-		if (has_wiki):
+		# add item to reduced set if projects enabled
+		repository_name,has_projects = item
+		if (has_projects):
 			filter_set.add(repository_name)
 
 		return filter_set
 
 	return reduce(evaluator,repository_set,set())
 
-def disable_repository_wiki(auth_token,repository_name):
+def disable_repository_projects(auth_token,repository_name):
 	# split repository into owner/repository parts
 	owner,repository = repository_name.split('/')
 
@@ -52,11 +52,11 @@ def disable_repository_wiki(auth_token,repository_name):
 		githubapi.update_repository_properties(
 			auth_token,
 			owner,repository,
-			wiki = False
+			projects = False
 		)
 
 	except githubapi.APIRequestError as e:
-		common.github_api_exit_error('Unable to disable wiki for repository {0}/{1}.'.format(owner,repository),e)
+		common.github_api_exit_error('Unable to disable projects for repository {0}/{1}.'.format(owner,repository),e)
 
 def main():
 	# fetch CLI arguments
@@ -70,9 +70,9 @@ def main():
 	config_data = common.load_config()
 	config_auth_token = config_data['auth_token']
 
-	# fetch repository list and wiki status of the specified repository type
+	# fetch repository list and projects status of the specified repository type
 	print('Building repository list:')
-	all_repository_set = get_repository_name_wiki_status_set(
+	all_repository_set = get_repository_name_projects_status_set(
 		config_auth_token,
 		config_data['repository_type'],
 		common.RepositoryFilter(filter_list_include,filter_list_exclude)
@@ -86,23 +86,23 @@ def main():
 
 	print('\nTotal repositories: {0}'.format(repository_count))
 
-	# determine wiki enabled count
-	wiki_enabled_repository_set = filter_repository_wiki_enabled(all_repository_set)
-	wiki_enabled_count = len(wiki_enabled_repository_set)
+	# determine project enabled count
+	projects_enabled_repository_set = filter_repository_projects_enabled(all_repository_set)
+	projects_enabled_count = len(projects_enabled_repository_set)
 
-	if (wiki_enabled_count < 1):
+	if (projects_enabled_count < 1):
 		# no projects enabled - no work
-		print('All wikis disabled')
+		print('All projects disabled')
 		return
 
-	print('Wikis enabled: {0}'.format(wiki_enabled_count))
+	print('Projects enabled: {0}'.format(projects_enabled_count))
 
-	# disable wikis (only simulation if dry run mode)
-	print('\n\nDisabling wikis{0}:'.format(' [DRY RUN]' if (dry_run) else ''))
+	# disable projects (only simulation if dry run mode)
+	print('\n\nDisabling projects{0}:'.format(' [DRY RUN]' if (dry_run) else ''))
 
-	for repository_name in wiki_enabled_repository_set:
+	for repository_name in projects_enabled_repository_set:
 		if (not dry_run):
-			disable_repository_wiki(config_auth_token,repository_name)
+			disable_repository_projects(config_auth_token,repository_name)
 
 		print(repository_name)
 

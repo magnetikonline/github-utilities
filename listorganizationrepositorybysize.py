@@ -17,7 +17,7 @@ def get_organization_repository_size_sorted_list(auth_token,organization_name,re
 			))
 
 	except githubapi.APIRequestError as e:
-		common.github_exit_error(
+		common.github_api_exit_error(
 			'Unable to fetch repository list for organization {0}, type {1}.'.format(
 				organization_name,
 				repository_type
@@ -41,7 +41,7 @@ def main():
 	config_auth_token = config_data['auth_token']
 
 	# fetch repository names/sizes of the specified type
-	print('Fetching repository list by size:')
+	print('Building repository list ordered by size:')
 	repository_list = get_organization_repository_size_sorted_list(
 		config_auth_token,
 		config_data[ORGANIZATION_CONFIG_KEY],

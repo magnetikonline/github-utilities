@@ -21,12 +21,12 @@ class APIRequestError(Exception):
 class RequestMethod(urllib2.Request):
 	def __init__(self,method,**kwargs):
 		self.http_method = method
-		urllib2.Request.__init__(self,**kwargs) # note: can't super() old style class
+		urllib2.Request.__init__(self,**kwargs) # note: you can't super() old style Python classes
 
 	def get_method(self):
 		return self.http_method
 
-def make_request(
+def _make_request(
 	auth_token,api_path,
 	method = None,
 	parameter_collection = None
@@ -59,7 +59,6 @@ def make_request(
 	else:
 		# other methods (POST/PATCH/PUT/DELETE)
 		data_send = None
-
 		if (parameter_collection is not None):
 			# convert parameter collection to JSON - sent with request
 			data_send = json.dumps(
@@ -85,7 +84,7 @@ def make_request(
 		# re-raise as API error
 		raise APIRequestError(
 			e.code, # HTTP code
-			e.read() # error response
+			e.read() # error message
 		)
 
 	else:
@@ -95,7 +94,7 @@ def make_request(
 
 		return response_data
 
-def make_request_paged(
+def _make_request_paged(
 	auth_token,api_path,
 	parameter_collection = {},
 	item_processor = None
@@ -121,12 +120,12 @@ def make_request_paged(
 		)
 
 		# make API request
-		response_data = make_request(
+		response_data = _make_request(
 			auth_token,api_path,
 			parameter_collection = parameter_paging_list
 		)
 
-		# process result items/rows - will exit when no further result pages
+		# process result items/rows - will exit when page returned with no further items
 		active = False
 		for response_item in item_processor(response_data):
 			active = True
@@ -137,7 +136,7 @@ def make_request_paged(
 
 # info: https://developer.github.com/v3/repos/#list-your-repositories
 def get_user_repository_list(auth_token,repository_type):
-	return make_request_paged(
+	return _make_request_paged(
 		auth_token,
 		'user/repos',
 		parameter_collection = {
@@ -147,7 +146,7 @@ def get_user_repository_list(auth_token,repository_type):
 
 # info: https://developer.github.com/v3/repos/#list-organization-repositories
 def get_organization_repository_list(auth_token,organization_name,repository_type):
-	return make_request_paged(
+	return _make_request_paged(
 		auth_token,
 		'orgs/{0}/repos'.format(organization_name),
 		parameter_collection = {
@@ -158,13 +157,13 @@ def get_organization_repository_list(auth_token,organization_name,repository_typ
 # info: https://developer.github.com/v3/repos/#edit
 def update_repository_properties(
 	auth_token,owner,repository,
+	default_branch = None,
 	description = None,
 	homepage = None,
-	private = None,
 	issues = None,
-	wiki = None,
-	downloads = None,
-	default_branch = None
+	private = None,
+	projects = None,
+	wiki = None
 ):
 	# build up request collection from given arguments
 	patch_collection = {
@@ -175,16 +174,16 @@ def update_repository_properties(
 		if (param is not None):
 			patch_collection[key] = param
 
+	add_property(default_branch,'default_branch')
 	add_property(description,'description')
 	add_property(homepage,'homepage')
-	add_property(private,'private')
 	add_property(issues,'has_issues')
+	add_property(private,'private')
+	add_property(projects,'has_projects')
 	add_property(wiki,'has_wiki')
-	add_property(downloads,'has_downloads')
-	add_property(default_branch,'default_branch')
 
-	# patch repository
-	return make_request(
+	# update repository
+	return _make_request(
 		auth_token,
 		'repos/{0}/{1}'.format(
 			urllib.quote(owner),
@@ -196,14 +195,14 @@ def update_repository_properties(
 
 # info: https://developer.github.com/v3/activity/watching/#list-repositories-being-watched
 def get_user_subscription_list(auth_token):
-	return make_request_paged(
+	return _make_request_paged(
 		auth_token,
 		'user/subscriptions'
 	)
 
 # info: https://developer.github.com/v3/activity/watching/#get-a-repository-subscription
 def get_user_repository_subscription(auth_token,owner,repository):
-	return make_request(
+	return _make_request(
 		auth_token,
 		'repos/{0}/{1}/subscription'.format(
 			urllib.quote(owner),
@@ -217,7 +216,7 @@ def set_user_repository_subscription(
 	subscribed = False,
 	ignored = False
 ):
-	return make_request(
+	return _make_request(
 		auth_token,
 		'repos/{0}/{1}/subscription'.format(
 			urllib.quote(owner),
