@@ -3,7 +3,7 @@
 import common
 import githubapi
 
-ORGANIZATION_CONFIG_KEY = 'organization'
+ORGANIZATION_CONFIG_KEY = 'ORGANIZATION'
 
 
 def get_organization_repository_size_sorted_list(auth_token,organization_name,repository_type):
@@ -38,14 +38,14 @@ def main():
 		config_key_addition_set = { ORGANIZATION_CONFIG_KEY }
 	)
 
-	config_auth_token = config_data['auth_token']
+	config_auth_token = config_data['AUTH_TOKEN']
 
 	# fetch repository names/sizes of the specified type
 	print('Building repository list ordered by size:')
 	repository_list = get_organization_repository_size_sorted_list(
 		config_auth_token,
 		config_data[ORGANIZATION_CONFIG_KEY],
-		config_data['repository_type']
+		config_data['REPOSITORY_TYPE']
 	)
 
 	# output list, repository URI/size - tab separated

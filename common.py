@@ -6,7 +6,7 @@ import sys
 
 REPOSITORY_FILTER_REGEXP = re.compile(r'^[*/A-Za-z0-9_.-]+$')
 
-MANDATORY_CONFIG_KEY_SET = {'auth_token','repository_type'}
+MANDATORY_CONFIG_KEY_SET = {'AUTH_TOKEN','REPOSITORY_TYPE'}
 CONFIG_FILE = '{0}/{1}'.format(
 	os.path.dirname(os.path.realpath(__file__)),
 	'config.json'
@@ -92,7 +92,7 @@ def load_config(config_key_addition_set = set()):
 			exit_error('Config key [{0}] cannot be empty'.format(config_key))
 
 	# validate auth token format
-	if (not GITHUB_AUTH_TOKEN_REGEXP.search(config_data['auth_token'])):
+	if (not GITHUB_AUTH_TOKEN_REGEXP.search(config_data['AUTH_TOKEN'])):
 		exit_error('Invalid GitHub authorization token specified in config')
 
 	# return expected config items from config data

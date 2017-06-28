@@ -13,7 +13,7 @@ Random scripts for working with GitHub itself and repositories. All designed to 
 ## Utilities
 
 ### [listorganizationrepositorybysize.py](listorganizationrepositorybysize.py)
-- Fetches all repositories for a given `organization`, ordered in descending size order.
+- Fetches all repositories for a given `ORGANIZATION`, ordered in descending size order.
 - Emits results to the console as tab separated repository/size (kilobytes) lines.
 
 ### [removerepositorywiki.py](removerepositorywiki.py)
@@ -36,10 +36,11 @@ Random scripts for working with GitHub itself and repositories. All designed to 
 
 ## Configuration
 All settings contained in a single [`config.json`](config.json). A breakdown of each setting follows:
-- `auth_token` - a valid GitHub token ID, generated via the [Personal access tokens](https://github.com/settings/tokens) page. Token requires full access to the `repo` scope and it's sub-scopes:
+- `AUTH_TOKEN` - a valid GitHub token ID, generated via the [Personal access tokens](https://github.com/settings/tokens) page. Token requires full access to the `repo` scope and it's sub-scopes:
+
 	![Personal access token permissions](http://i.imgur.com/m12VszH.png)
-- `organization` - where required, specifies the organization to use for repository fetch.
-- `repository_type` - when repositories are fetched - defines the context/association to to user to use.
+- `ORGANIZATION` - where required, specifies the organization to use for repository fetch.
+- `REPOSITORY_TYPE` - when repositories are fetched - defines the context/association to to user to use.
 
 	Valid options [are listed here](https://developer.github.com/v3/repos/#list-your-repositories) with the default of `owner` more than likely what you're after.
 

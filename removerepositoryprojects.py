@@ -68,13 +68,13 @@ def main():
 
 	# load config from file
 	config_data = common.load_config()
-	config_auth_token = config_data['auth_token']
+	config_auth_token = config_data['AUTH_TOKEN']
 
 	# fetch repository list and projects status of the specified repository type
 	print('Building repository list:')
 	all_repository_set = get_repository_name_projects_status_set(
 		config_auth_token,
-		config_data['repository_type'],
+		config_data['REPOSITORY_TYPE'],
 		common.RepositoryFilter(filter_list_include,filter_list_exclude)
 	)
 
