@@ -58,8 +58,8 @@ def main():
 	# fetch CLI arguments
 	(
 		dry_run,
-		filter_list_include,
-		filter_list_exclude
+		filter_include_list,
+		filter_exclude_list
 	) = common.read_arguments()
 
 	# load config from file
@@ -71,7 +71,7 @@ def main():
 	all_repository_set = get_repository_name_set(
 		config_auth_token,
 		config_data['REPOSITORY_TYPE'],
-		common.RepositoryFilter(filter_list_include,filter_list_exclude)
+		common.RepositoryFilter(filter_include_list,filter_exclude_list)
 	)
 
 	# get total count, if zero then no work
