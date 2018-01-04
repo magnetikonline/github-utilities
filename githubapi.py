@@ -113,8 +113,8 @@ def _make_request_paged(
 
 	while (active):
 		# build paging parameters - merged with base request parameters
-		parameter_paging_list = parameter_collection.copy()
-		parameter_paging_list.update(
+		parameter_paged_collection = parameter_collection.copy()
+		parameter_paged_collection.update(
 			page = request_page,
 			per_page = REQUEST_PAGE_SIZE
 		)
@@ -122,7 +122,7 @@ def _make_request_paged(
 		# make API request
 		response_data = _make_request(
 			auth_token,api_path,
-			parameter_collection = parameter_paging_list
+			parameter_collection = parameter_paged_collection
 		)
 
 		# process result items/rows - will exit when page returned with no further items
