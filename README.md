@@ -19,12 +19,12 @@ Random scripts for working with GitHub itself and repositories. All designed to 
 ### [removerepositorywiki.py](removerepositorywiki.py)
 - Scans repositories and reports all with an enabled [Wiki](https://help.github.com/articles/about-github-wikis/).
 - Repository checking scope can be set with the `--include` / `--exclude` [filter arguments](#filter-arguments).
-- With `--commit` argument passed will actively disable each wiki found.
+- With `--commit` argument passed will disable each wiki found.
 
 ### [removerepositoryprojects.py](removerepositoryprojects.py)
 - Scans repositories and reports all with an enabled [Projects](https://help.github.com/articles/about-project-boards/) board.
 - Repository checking scope can be set with the `--include` / `--exclude` [filter arguments](#filter-arguments).
-- With `--commit` argument passed will actively disable each project board found.
+- With `--commit` argument passed will disable each project board found.
 
 ### [subscriberepositories.py](subscriberepositories.py)
 - By default GitHub [notification settings](https://github.com/settings/notifications) are configured to automatically watch all repositories to which you have _push access_ - including your own personal repositories:
@@ -32,7 +32,7 @@ Random scripts for working with GitHub itself and repositories. All designed to 
 	- Disabling `Automatic watching` works, but you're now left in a situation of potentially forgetting to watch *your own* personal repositories after creation and update of issues/PRs.
 - This script fetches all repositories in scope and compares to your subscription list - reporting back repositories that aren't currently watched.
 - Repository checking scope can be set with the `--include` / `--exclude` [filter arguments](#filter-arguments).
-- With `--commit` argument passed any repositories not watched will be subscribed to.
+- With `--commit` argument passed any repositories not currently watched will be subscribed to.
 
 ## Configuration
 All settings contained in a single [`config.json`](config.json). A breakdown of each setting follows:
@@ -42,7 +42,7 @@ All settings contained in a single [`config.json`](config.json). A breakdown of 
 - `ORGANIZATION` - where required, specifies the organization to use for repository fetch.
 - `REPOSITORY_TYPE` - when repositories are fetched - defines the context/association to to user to use.
 
-	Valid options [are listed here](https://developer.github.com/v3/repos/#list-your-repositories) with the default of `owner` more than likely what you're after.
+	Valid options [are listed here](https://developer.github.com/v3/repos/#list-your-repositories) with `owner` more than likely what you're after.
 
 ## Filter arguments
 Certain scripts allow control of their repository scope via the `--include` and `--exclude` arguments. This provides the ability to skip over a subset of repositories from checks/updates.
