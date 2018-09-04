@@ -15,12 +15,12 @@ CONFIG_FILE = '{0}/{1}'.format(
 GITHUB_AUTH_TOKEN_REGEXP = re.compile(r'^[a-f0-9]{40}$')
 
 
-def exit_error(message):
+def _exit_error(message):
 	sys.stderr.write('Error: {0}\n'.format(message))
 	sys.exit(1)
 
 def github_api_exit_error(message,api_request_error):
-	exit_error('{0} Code: {1}'.format(
+	_exit_error('{0} Code: {1}'.format(
 		message,
 		api_request_error.http_code
 	))
@@ -57,7 +57,7 @@ def read_arguments():
 		for filter_item in filter_list:
 			if (not REPOSITORY_FILTER_REGEXP.search(filter_item)):
 				# invalid filter characters
-				exit_error('Invalid {0} filter of [{1}]'.format(filter_type,filter_item))
+				_exit_error('Invalid {0} filter of [{1}]'.format(filter_type,filter_item))
 
 	validate_filter_list('include',arg_list.include)
 	validate_filter_list('exclude',arg_list.exclude)
@@ -75,7 +75,7 @@ def load_config(config_key_addition_set = set()):
 
 	# does config exist?
 	if (not os.path.isfile(CONFIG_FILE)):
-		exit_error('Unable to load {0}'.format(CONFIG_FILE))
+		_exit_error('Unable to load {0}'.format(CONFIG_FILE))
 
 	# open and parse JSON config
 	fp = open(CONFIG_FILE,'rb')
@@ -85,15 +85,15 @@ def load_config(config_key_addition_set = set()):
 	for config_key in config_key_set:
 		# config keys exist?
 		if (config_key not in config_data):
-			exit_error('Unable to find [{0}] config key in [{1}]'.format(config_key,CONFIG_FILE))
+			_exit_error('Unable to find [{0}] config key in [{1}]'.format(config_key,CONFIG_FILE))
 
 		# ensure value is not empty
 		if (not config_data[config_key].strip()):
-			exit_error('Config key [{0}] cannot be empty'.format(config_key))
+			_exit_error('Config key [{0}] cannot be empty'.format(config_key))
 
 	# validate auth token format
 	if (not GITHUB_AUTH_TOKEN_REGEXP.search(config_data['AUTH_TOKEN'])):
-		exit_error('Invalid GitHub authorization token specified in config')
+		_exit_error('Invalid GitHub authorization token specified in config')
 
 	# return expected config items from config data
 	return {
