@@ -12,21 +12,21 @@ Random scripts for working with GitHub itself and repositories. All designed to 
 
 ## Utilities
 
-### [listorganizationrepositorybysize.py](listorganizationrepositorybysize.py)
+### [`listorganizationrepositorybysize.py`](listorganizationrepositorybysize.py)
 - Fetches all repositories for a given `ORGANIZATION`, ordered in descending size order.
 - Emits results to the console as tab separated repository/size (kilobytes) lines.
 
-### [removerepositorywiki.py](removerepositorywiki.py)
+### [`removerepositorywiki.py`](removerepositorywiki.py)
 - Scans repositories and reports all with an enabled [Wiki](https://help.github.com/articles/about-github-wikis/).
 - Repository checking scope can be set with the `--include` / `--exclude` [filter arguments](#filter-arguments).
 - With `--commit` argument passed will disable each wiki found.
 
-### [removerepositoryprojects.py](removerepositoryprojects.py)
+### [`removerepositoryprojects.py`](removerepositoryprojects.py)
 - Scans repositories and reports all with an enabled [Projects](https://help.github.com/articles/about-project-boards/) board.
 - Repository checking scope can be set with the `--include` / `--exclude` [filter arguments](#filter-arguments).
 - With `--commit` argument passed will disable each project board found.
 
-### [subscriberepositories.py](subscriberepositories.py)
+### [`subscriberepositories.py`](subscriberepositories.py)
 - By default GitHub [notification settings](https://github.com/settings/notifications) are configured to automatically watch all repositories to which you have _push access_ - including your own personal repositories:
 	- This state works well when running solo, but association to an active organization you soon find a watch list getting very noisy with notifications.
 	- Disabling `Automatic watching` works, but you're now left in a situation of potentially forgetting to watch *your own* personal repositories after creation and update of issues/PRs.
@@ -38,7 +38,7 @@ Random scripts for working with GitHub itself and repositories. All designed to 
 All settings contained in a single [`config.json`](config.json). A breakdown of each setting follows:
 - `AUTH_TOKEN` - a valid GitHub token ID, generated via the [Personal access tokens](https://github.com/settings/tokens) page. Token requires full access to the `repo` scope and it's sub-scopes:
 
-	![Personal access token permissions](http://i.imgur.com/m12VszH.png)
+	![Personal access token permissions](https://i.imgur.com/m12VszH.png)
 - `ORGANIZATION` - where required, specifies the organization to use for repository fetch.
 - `REPOSITORY_TYPE` - when repositories are fetched - defines the context/association to to user to use.
 
