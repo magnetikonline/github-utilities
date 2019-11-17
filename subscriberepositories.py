@@ -1,7 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-import common
-import githubapi
+from lib import common,githubapi
 
 
 def get_repository_name_set(auth_token,repository_type,repository_filter):
@@ -20,7 +19,7 @@ def get_repository_name_set(auth_token,repository_type,repository_filter):
 			repository_set.add(repository_name)
 
 	except githubapi.APIRequestError as e:
-		common.github_api_exit_error('Unable to fetch repository list for type {0}.'.format(repository_type),e)
+		common.github_api_exit_error(f'Unable to fetch repository list for type {repository_type}.',e)
 
 	return repository_set
 
@@ -52,7 +51,7 @@ def set_respository_subscription(auth_token,repository_full_name):
 		)
 
 	except githubapi.APIRequestError as e:
-		common.github_api_exit_error('Unable to set subscription for repository {0}/{1}.'.format(owner,repository),e)
+		common.github_api_exit_error(f'Unable to set subscription for repository {owner}/{repository}.',e)
 
 def main():
 	# fetch CLI arguments
@@ -80,13 +79,13 @@ def main():
 		print('\nNo repositories for processing')
 		return
 
-	print('\nTotal repositories: {0}'.format(repository_count))
+	print(f'\nTotal repositories: {repository_count}')
 
 	# fetch repository watch details (subscriptions)
 	print('\n\nFetching currently watched repositories:')
 	subscription_set = get_repository_subscription_name_set(config_auth_token)
 
-	print('\nTotal subscriptions: {0}'.format(len(subscription_set)))
+	print(f'\nTotal subscriptions: {len(subscription_set)}')
 
 	# intersect repository set against current subscriptions - report difference
 	unsubscribed_repository_set = all_repository_set.difference(subscription_set)
@@ -103,10 +102,10 @@ def main():
 		print(repository_name)
 
 	# add subscriptions (only simulation if dry run mode)
-	print('\n\nAdding {0} subscriptions{1}:'.format(
-		unsubscribed_repository_set_count,
-		' [DRY RUN]' if (dry_run) else ''
-	))
+	print(
+		f'\n\nAdding {unsubscribed_repository_set_count} subscriptions' +
+		(' [DRY RUN]' if (dry_run) else '') + ':'
+	)
 
 	for repository_name in unsubscribed_repository_set:
 		if (not dry_run):

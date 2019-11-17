@@ -5,25 +5,17 @@ import re
 import sys
 
 REPOSITORY_FILTER_REGEXP = re.compile(r'^[*/A-Za-z0-9_.-]+$')
-
 MANDATORY_CONFIG_KEY_SET = {'AUTH_TOKEN','REPOSITORY_TYPE'}
-CONFIG_FILE = '{0}/{1}'.format(
-	os.path.dirname(os.path.realpath(__file__)),
-	'config.json'
-)
-
+CONFIG_FILE = os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + '/config.json'
 GITHUB_AUTH_TOKEN_REGEXP = re.compile(r'^[a-f0-9]{40}$')
 
 
 def _exit_error(message):
-	sys.stderr.write('Error: {0}\n'.format(message))
+	print(f'Error: {message}',file = sys.stderr)
 	sys.exit(1)
 
 def github_api_exit_error(message,api_request_error):
-	_exit_error('{0} Code: {1}'.format(
-		message,
-		api_request_error.http_code
-	))
+	_exit_error(f'{message} HTTP code: {api_request_error.http_code}')
 
 def read_arguments():
 	parser = argparse.ArgumentParser()
@@ -31,7 +23,7 @@ def read_arguments():
 	parser.add_argument(
 		'--commit',
 		action = 'store_true',
-		help = 'apply changes back to GitHub, otherwise dry run only'
+		help = 'apply changes, otherwise dry run only'
 	)
 
 	parser.add_argument(
@@ -57,7 +49,7 @@ def read_arguments():
 		for filter_item in filter_list:
 			if (not REPOSITORY_FILTER_REGEXP.search(filter_item)):
 				# invalid filter characters
-				_exit_error('Invalid {0} filter of [{1}]'.format(filter_type,filter_item))
+				_exit_error(f'Invalid {filter_type} filter of [{filter_item}]')
 
 	validate_filter_list('include',arg_list.include)
 	validate_filter_list('exclude',arg_list.exclude)
@@ -75,7 +67,7 @@ def load_config(config_key_addition_set = set()):
 
 	# does config exist?
 	if (not os.path.isfile(CONFIG_FILE)):
-		_exit_error('Unable to load {0}'.format(CONFIG_FILE))
+		_exit_error(f'Unable to load {CONFIG_FILE}')
 
 	# open and parse JSON config
 	fp = open(CONFIG_FILE,'rb')
@@ -85,11 +77,11 @@ def load_config(config_key_addition_set = set()):
 	for config_key in config_key_set:
 		# config keys exist?
 		if (config_key not in config_data):
-			_exit_error('Unable to find [{0}] config key in [{1}]'.format(config_key,CONFIG_FILE))
+			_exit_error(f'Unable to find [{config_key}] config key in [{CONFIG_FILE}]')
 
 		# ensure value is not empty
 		if (not config_data[config_key].strip()):
-			_exit_error('Config key [{0}] cannot be empty'.format(config_key))
+			_exit_error(f'Config key [{config_key}] is empty')
 
 	# validate auth token format
 	if (not GITHUB_AUTH_TOKEN_REGEXP.search(config_data['AUTH_TOKEN'])):
@@ -123,12 +115,8 @@ class RepositoryFilter(object):
 		build_list = []
 		for filter_item in source_list:
 			# escape meta characters, set wildcard/start/end metas
-			build_list.append(
-				re.compile('^{0}$'.format(
-					re.escape(filter_item)
-						.replace('\*','.+?')
-				))
-			)
+			re_filter = re.escape(filter_item).replace('\\*','.+?')
+			build_list.append(re.compile(f'^{re_filter}$'))
 
 		return build_list
 

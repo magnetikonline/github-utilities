@@ -1,7 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-import common
-import githubapi
+from lib import common,githubapi
 
 
 def get_repository_name_projects_status_set(auth_token,repository_type,repository_filter):
@@ -9,40 +8,24 @@ def get_repository_name_projects_status_set(auth_token,repository_type,repositor
 
 	try:
 		for repository_item in githubapi.get_user_repository_list(auth_token,repository_type):
-			repository_name = repository_item['full_name']
+			name = repository_item['full_name']
 			has_projects = repository_item['has_projects']
 
 			# include/exclude repository?
-			if (not repository_filter.accept(repository_name)):
+			if (not repository_filter.accept(name)):
 				continue
 
 			# display name and projects status
-			print('{0}{1}'.format(
-				repository_name,
-				' - Projects enabled' if (has_projects) else ''
-			))
-
-			# add to set
-			repository_set.add((
-				repository_name,
-				has_projects
-			))
+			print(name + (' - Projects enabled' if (has_projects) else ''))
+			repository_set.add((name,has_projects))
 
 	except githubapi.APIRequestError as e:
-		common.github_api_exit_error('Unable to fetch repository list for type {0}.'.format(repository_type),e)
+		common.github_api_exit_error(f'Unable to fetch repository list for type {repository_type}.',e)
 
 	return repository_set
 
 def filter_repository_projects_enabled(repository_set):
-	def evaluator(filter_set,item):
-		# add item to reduced set if projects enabled
-		repository_name,has_projects = item
-		if (has_projects):
-			filter_set.add(repository_name)
-
-		return filter_set
-
-	return reduce(evaluator,repository_set,set())
+	return {name for name,has_projects in repository_set if has_projects}
 
 def disable_repository_projects(auth_token,repository_name):
 	# split repository into owner/repository parts
@@ -56,7 +39,7 @@ def disable_repository_projects(auth_token,repository_name):
 		)
 
 	except githubapi.APIRequestError as e:
-		common.github_api_exit_error('Unable to disable projects for repository {0}/{1}.'.format(owner,repository),e)
+		common.github_api_exit_error(f'Unable to disable projects for repository {owner}/{repository}.',e)
 
 def main():
 	# fetch CLI arguments
@@ -84,7 +67,7 @@ def main():
 		print('\nNo repositories for processing')
 		return
 
-	print('\nTotal repositories: {0}'.format(repository_count))
+	print(f'\nTotal repositories: {repository_count}')
 
 	# determine project enabled count
 	projects_enabled_repository_set = filter_repository_projects_enabled(all_repository_set)
@@ -92,13 +75,14 @@ def main():
 
 	if (projects_enabled_count < 1):
 		# no projects enabled - no work
-		print('All projects disabled')
+		print('\nAll projects disabled')
 		return
 
-	print('Projects enabled: {0}'.format(projects_enabled_count))
-
 	# disable projects (only simulation if dry run mode)
-	print('\n\nDisabling projects{0}:'.format(' [DRY RUN]' if (dry_run) else ''))
+	print(
+		f'\n\nDisabling {projects_enabled_count} projects' +
+		(' [DRY RUN]' if (dry_run) else '') + ':'
+	)
 
 	for repository_name in projects_enabled_repository_set:
 		if (not dry_run):

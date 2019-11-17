@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-import common
-import githubapi
+from lib import common,githubapi
+
 
 ORGANIZATION_CONFIG_KEY = 'ORGANIZATION'
 
@@ -17,13 +17,7 @@ def get_organization_repository_size_sorted_list(auth_token,organization_name,re
 			))
 
 	except githubapi.APIRequestError as e:
-		common.github_api_exit_error(
-			'Unable to fetch repository list for organization {0}, type {1}.'.format(
-				organization_name,
-				repository_type
-			),
-			e
-		)
+		common.github_api_exit_error(f'Unable to fetch repository list for organization {organization_name}, type {repository_type}.',e)
 
 	# sort list by repository size descending
 	return sorted(
@@ -35,7 +29,7 @@ def get_organization_repository_size_sorted_list(auth_token,organization_name,re
 def main():
 	# load config from file
 	config_data = common.load_config(
-		config_key_addition_set = { ORGANIZATION_CONFIG_KEY }
+		config_key_addition_set = {ORGANIZATION_CONFIG_KEY}
 	)
 
 	config_auth_token = config_data['AUTH_TOKEN']
@@ -50,7 +44,7 @@ def main():
 
 	# output list, repository URI/size - tab separated
 	for repository_uri,repository_size in repository_list:
-		print('{0}\t{1}'.format(repository_uri,repository_size))
+		print(f'{repository_uri}\t{repository_size}')
 
 
 if (__name__ == '__main__'):

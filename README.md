@@ -1,5 +1,5 @@
 # GitHub utilities
-Random scripts for working with GitHub itself and repositories. All designed to work against Python 2.7+.
+Random scripts for working with GitHub itself and your repositories. All designed for Python 3.7+.
 
 - [Utilities](#utilities)
 	- [listorganizationrepositorybysize.py](#listorganizationrepositorybysizepy)
@@ -39,6 +39,7 @@ All settings contained in a single [`config.json`](config.json). A breakdown of 
 - `AUTH_TOKEN` - a valid GitHub token ID, generated via the [Personal access tokens](https://github.com/settings/tokens) page. Token requires full access to the `repo` scope and it's sub-scopes:
 
 	![Personal access token permissions](https://i.imgur.com/m12VszH.png)
+
 - `ORGANIZATION` - where required, specifies the organization to use for repository fetch.
 - `REPOSITORY_TYPE` - when repositories are fetched - defines the context/association to to user to use.
 
@@ -47,10 +48,10 @@ All settings contained in a single [`config.json`](config.json). A breakdown of 
 ## Filter arguments
 Certain scripts allow control of their repository scope via the `--include` and `--exclude` arguments. This provides the ability to skip over a subset of repositories from checks/updates.
 
-- The valid character range for a filter is `[*/A-Za-z0-9_.-]` or a wildcard (`*`) for matching one or more characters.
+- Valid character range for a filter is `[/A-Za-z0-9_.-]` - a wildcard (`*`) will match one or more characters.
 - A filter will be tested against the full `user/repository_name` or `organization/repository_name` name.
 - An `--exclude` match will negate an `--include` filter.
-- If no `--include` filter is given, default will be "match all" (`*`).
+- If no `--include` filter is given, default will be to "match all" (`*`).
 
 ### Examples
 

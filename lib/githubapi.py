@@ -1,11 +1,11 @@
 import json
-import urllib
-import urllib2
+import urllib.error
+import urllib.parse
+import urllib.request
 
 API_BASE_URL = 'https://api.github.com'
 REQUEST_ACCEPT_VERSION = 'application/vnd.github.v3+json'
 REQUEST_USER_AGENT = 'magnetikonline/githubutilities 1.0'
-REQUEST_TOKEN = 'token {0}'
 REQUEST_DATA_CONTENT_TYPE = 'application/json'
 REQUEST_PAGE_SIZE = 20
 
@@ -18,46 +18,34 @@ class APIRequestError(Exception):
 
 		super(APIRequestError,self).__init__()
 
-class RequestMethod(urllib2.Request):
-	def __init__(self,method,**kwargs):
-		self.http_method = method
-		urllib2.Request.__init__(self,**kwargs) # note: you can't super() old style Python classes
-
-	def get_method(self):
-		return self.http_method
-
 def _make_request(
 	auth_token,api_path,
 	method = None,
 	parameter_collection = None
 ):
 	# build base request URL/headers
-	request_url = '{0}/{1}'.format(API_BASE_URL,api_path)
-	request_header_collection = {
+	request_url = f'{API_BASE_URL}/{api_path}'
+	header_collection = {
 		'Accept': REQUEST_ACCEPT_VERSION,
 		'User-Agent': REQUEST_USER_AGENT
 	}
 
 	# API request has authorization token present?
 	if (auth_token is not None):
-		request_header_collection['Authorization'] = REQUEST_TOKEN.format(auth_token)
+		header_collection['Authorization'] = f'token {auth_token}'
 
 	if (method is None):
 		# GET method
 		# add request parameters as URL querystring items
 		if (parameter_collection is not None):
-			request_url = '{0}?{1}'.format(
-				request_url,
-				urllib.urlencode(parameter_collection)
-			)
+			request_url = f'{request_url}?{urllib.parse.urlencode(parameter_collection)}'
 
-		request = urllib2.Request(
-			url = request_url,
-			headers = request_header_collection
+		request = urllib.request.Request(
+			headers = header_collection,
+			url = request_url
 		)
-
 	else:
-		# other methods (POST/PATCH/PUT/DELETE)
+		# other method types (POST/PATCH/PUT/DELETE)
 		data_send = None
 		if (parameter_collection is not None):
 			# convert parameter collection to JSON - sent with request
@@ -67,26 +55,24 @@ def _make_request(
 			)
 
 			# set content type
-			request_header_collection['Content-Type'] = REQUEST_DATA_CONTENT_TYPE
+			header_collection['Content-Type'] = REQUEST_DATA_CONTENT_TYPE
 
-		request = RequestMethod(
+		request = urllib.request.Request(
+			data = bytes(data_send,'ascii'),
+			headers = header_collection,
 			method = method,
-			url = request_url,
-			data = data_send,
-			headers = request_header_collection
+			url = request_url
 		)
 
 	# make the request
 	try:
-		response = urllib2.urlopen(request)
-
-	except urllib2.HTTPError as e:
+		response = urllib.request.urlopen(request)
+	except urllib.error.HTTPError as e:
 		# re-raise as API error
 		raise APIRequestError(
 			e.code, # HTTP code
 			e.read() # error message
 		)
-
 	else:
 		# parse JSON response and return
 		response_data = json.load(response)
@@ -148,7 +134,7 @@ def get_user_repository_list(auth_token,repository_type):
 def get_organization_repository_list(auth_token,organization_name,repository_type):
 	return _make_request_paged(
 		auth_token,
-		'orgs/{0}/repos'.format(organization_name),
+		f'orgs/{organization_name}/repos',
 		parameter_collection = {
 			'type': repository_type
 		}
@@ -185,10 +171,7 @@ def update_repository_properties(
 	# update repository
 	return _make_request(
 		auth_token,
-		'repos/{0}/{1}'.format(
-			urllib.quote(owner),
-			urllib.quote(repository)
-		),
+		f'repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repository)}',
 		method = 'PATCH',
 		parameter_collection = patch_collection
 	)
@@ -204,10 +187,7 @@ def get_user_subscription_list(auth_token):
 def get_user_repository_subscription(auth_token,owner,repository):
 	return _make_request(
 		auth_token,
-		'repos/{0}/{1}/subscription'.format(
-			urllib.quote(owner),
-			urllib.quote(repository)
-		)
+		f'repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repository)}/subscription'
 	)
 
 # info: https://developer.github.com/v3/activity/watching/#set-a-repository-subscription
@@ -218,10 +198,7 @@ def set_user_repository_subscription(
 ):
 	return _make_request(
 		auth_token,
-		'repos/{0}/{1}/subscription'.format(
-			urllib.quote(owner),
-			urllib.quote(repository)
-		),
+		f'repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repository)}/subscription',
 		method = 'PUT',
 		parameter_collection = {
 			'subscribed': subscribed,
