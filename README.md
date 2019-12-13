@@ -46,12 +46,11 @@ All settings contained in a single [`config.json`](config.json). A breakdown of 
 	Valid options [are listed here](https://developer.github.com/v3/repos/#list-your-repositories) with `owner` more than likely what you're after.
 
 ## Filter arguments
-Certain scripts allow control of their repository scope via the `--include` and `--exclude` arguments. This provides the ability to skip over a subset of repositories from checks/updates.
-
-- Valid character range for a filter is `[/A-Za-z0-9_.-]` - a wildcard (`*`) will match one or more characters.
-- A filter will be tested against the full `user/repository_name` or `organization/repository_name` name.
-- An `--exclude` match will negate an `--include` filter.
-- If no `--include` filter is given, default will be to "match all" (`*`).
+Certain scripts allow control of repository scope via `--include` and `--exclude` arguments, providing the ability to skip over a subset of repositories:
+- Valid filter character range is `[/A-Za-z0-9_.-]`, while a wildcard (`*`) will match one or more characters.
+- Filters are tested against the full `user/repository_name` or `organization/repository_name` name.
+- An `--exclude` match will negate any `--include`.
+- If no `--include` filter defined, default is to "match all" (`*`).
 
 ### Examples
 
