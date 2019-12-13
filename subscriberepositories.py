@@ -3,11 +3,11 @@
 from lib import common,githubapi
 
 
-def get_repository_name_set(auth_token,repository_type,repository_filter):
+def repository_name_set(auth_token,repository_type,repository_filter):
 	repository_set = set()
 
 	try:
-		for repository_item in githubapi.get_user_repository_list(auth_token,repository_type):
+		for repository_item in githubapi.user_repository_list(auth_token,repository_type):
 			repository_name = repository_item['full_name']
 
 			# include/exclude repository?
@@ -23,11 +23,11 @@ def get_repository_name_set(auth_token,repository_type,repository_filter):
 
 	return repository_set
 
-def get_repository_subscription_name_set(auth_token):
+def repository_subscription_name_set(auth_token):
 	subscription_set = set()
 
 	try:
-		for subscription_item in githubapi.get_user_subscription_list(auth_token):
+		for subscription_item in githubapi.user_subscription_list(auth_token):
 			repository_name = subscription_item['full_name']
 
 			# display subscription name & add to set
@@ -67,7 +67,7 @@ def main():
 
 	# fetch repository list of the specified type
 	print('Building repository list:')
-	all_repository_set = get_repository_name_set(
+	all_repository_set = repository_name_set(
 		config_auth_token,
 		config_data['REPOSITORY_TYPE'],
 		common.RepositoryFilter(filter_include_list,filter_exclude_list)
@@ -83,7 +83,7 @@ def main():
 
 	# fetch repository watch details (subscriptions)
 	print('\n\nFetching currently watched repositories:')
-	subscription_set = get_repository_subscription_name_set(config_auth_token)
+	subscription_set = repository_subscription_name_set(config_auth_token)
 
 	print(f'\nTotal subscriptions: {len(subscription_set)}')
 

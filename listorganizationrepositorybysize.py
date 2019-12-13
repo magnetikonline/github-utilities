@@ -6,11 +6,11 @@ from lib import common,githubapi
 ORGANIZATION_CONFIG_KEY = 'ORGANIZATION'
 
 
-def get_organization_repository_size_sorted_list(auth_token,organization_name,repository_type):
+def organization_repository_size_sorted_list(auth_token,organization_name,repository_type):
 	repository_list = []
 
 	try:
-		for repository_item in githubapi.get_organization_repository_list(auth_token,organization_name,repository_type):
+		for repository_item in githubapi.organization_repository_list(auth_token,organization_name,repository_type):
 			repository_list.append((
 				str(repository_item['git_url']),
 				int(repository_item['size'])
@@ -36,7 +36,7 @@ def main():
 
 	# fetch repository names/sizes of the specified type
 	print('Building repository list ordered by size:')
-	repository_list = get_organization_repository_size_sorted_list(
+	repository_list = organization_repository_size_sorted_list(
 		config_auth_token,
 		config_data[ORGANIZATION_CONFIG_KEY],
 		config_data['REPOSITORY_TYPE']

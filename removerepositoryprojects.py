@@ -3,11 +3,11 @@
 from lib import common,githubapi
 
 
-def get_repository_name_projects_status_set(auth_token,repository_type,repository_filter):
+def repository_name_projects_status_set(auth_token,repository_type,repository_filter):
 	repository_set = set()
 
 	try:
-		for repository_item in githubapi.get_user_repository_list(auth_token,repository_type):
+		for repository_item in githubapi.user_repository_list(auth_token,repository_type):
 			name = repository_item['full_name']
 			has_projects = repository_item['has_projects']
 
@@ -55,7 +55,7 @@ def main():
 
 	# fetch repository list and projects status of the specified repository type
 	print('Building repository list:')
-	all_repository_set = get_repository_name_projects_status_set(
+	all_repository_set = repository_name_projects_status_set(
 		config_auth_token,
 		config_data['REPOSITORY_TYPE'],
 		common.RepositoryFilter(filter_include_list,filter_exclude_list)

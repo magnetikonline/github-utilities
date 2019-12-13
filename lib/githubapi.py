@@ -121,7 +121,7 @@ def _make_request_paged(
 		request_page = request_page + 1
 
 # info: https://developer.github.com/v3/repos/#list-your-repositories
-def get_user_repository_list(auth_token,repository_type):
+def user_repository_list(auth_token,repository_type):
 	return _make_request_paged(
 		auth_token,
 		'user/repos',
@@ -131,7 +131,7 @@ def get_user_repository_list(auth_token,repository_type):
 	)
 
 # info: https://developer.github.com/v3/repos/#list-organization-repositories
-def get_organization_repository_list(auth_token,organization_name,repository_type):
+def organization_repository_list(auth_token,organization_name,repository_type):
 	return _make_request_paged(
 		auth_token,
 		f'orgs/{organization_name}/repos',
@@ -177,14 +177,14 @@ def update_repository_properties(
 	)
 
 # info: https://developer.github.com/v3/activity/watching/#list-repositories-being-watched
-def get_user_subscription_list(auth_token):
+def user_subscription_list(auth_token):
 	return _make_request_paged(
 		auth_token,
 		'user/subscriptions'
 	)
 
 # info: https://developer.github.com/v3/activity/watching/#get-a-repository-subscription
-def get_user_repository_subscription(auth_token,owner,repository):
+def user_repository_subscription(auth_token,owner,repository):
 	return _make_request(
 		auth_token,
 		f'repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repository)}/subscription'
