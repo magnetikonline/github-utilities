@@ -38,7 +38,7 @@ Random scripts for working with GitHub itself and your repositories. All designe
 All settings contained in a single [`config.json`](config.json). A breakdown of each setting follows:
 - `AUTH_TOKEN` - a valid GitHub token ID, generated via the [Personal access tokens](https://github.com/settings/tokens) page. Token requires full access to the `repo` scope and it's sub-scopes:
 
-	![Personal access token permissions](https://i.imgur.com/m12VszH.png)
+	![Personal access token permissions](https://user-images.githubusercontent.com/1818757/70870482-0b427580-1fe8-11ea-8bb7-662a28ad9cb0.png)
 
 - `ORGANIZATION` - where required, specifies the organization to use for repository fetch.
 - `REPOSITORY_TYPE` - when repositories are fetched - defines the context/association to to user to use.
