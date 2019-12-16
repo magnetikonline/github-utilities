@@ -18,7 +18,7 @@ class APIRequestError(Exception):
 
 		super(APIRequestError,self).__init__()
 
-def _make_request(
+def _request(
 	auth_token,api_path,
 	method = None,
 	parameter_collection = None
@@ -80,7 +80,7 @@ def _make_request(
 
 		return response_data
 
-def _make_request_paged(
+def _request_paged(
 	auth_token,api_path,
 	parameter_collection = {},
 	item_processor = None
@@ -106,7 +106,7 @@ def _make_request_paged(
 		)
 
 		# make API request
-		response_data = _make_request(
+		response_data = _request(
 			auth_token,api_path,
 			parameter_collection = parameter_paged_collection
 		)
@@ -117,12 +117,12 @@ def _make_request_paged(
 			active = True
 			yield response_item
 
-		# increment current page for next call
+		# increment page for next API call
 		request_page = request_page + 1
 
 # info: https://developer.github.com/v3/repos/#list-your-repositories
 def user_repository_list(auth_token,repository_type):
-	return _make_request_paged(
+	return _request_paged(
 		auth_token,
 		'user/repos',
 		parameter_collection = {
@@ -132,7 +132,7 @@ def user_repository_list(auth_token,repository_type):
 
 # info: https://developer.github.com/v3/repos/#list-organization-repositories
 def organization_repository_list(auth_token,organization_name,repository_type):
-	return _make_request_paged(
+	return _request_paged(
 		auth_token,
 		f'orgs/{organization_name}/repos',
 		parameter_collection = {
@@ -169,7 +169,7 @@ def update_repository_properties(
 	add_property(wiki,'has_wiki')
 
 	# update repository
-	return _make_request(
+	return _request(
 		auth_token,
 		f'repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repository)}',
 		method = 'PATCH',
@@ -178,14 +178,14 @@ def update_repository_properties(
 
 # info: https://developer.github.com/v3/activity/watching/#list-repositories-being-watched
 def user_subscription_list(auth_token):
-	return _make_request_paged(
+	return _request_paged(
 		auth_token,
 		'user/subscriptions'
 	)
 
 # info: https://developer.github.com/v3/activity/watching/#get-a-repository-subscription
 def user_repository_subscription(auth_token,owner,repository):
-	return _make_request(
+	return _request(
 		auth_token,
 		f'repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repository)}/subscription'
 	)
@@ -196,7 +196,7 @@ def set_user_repository_subscription(
 	subscribed = False,
 	ignored = False
 ):
-	return _make_request(
+	return _request(
 		auth_token,
 		f'repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repository)}/subscription',
 		method = 'PUT',
