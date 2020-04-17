@@ -94,7 +94,7 @@ def load_config(config_key_addition_set=set()):
     }
 
 
-class RepositoryFilter(object):
+class RepositoryFilter:
     def __init__(self, include_list, exclude_list):
         # convert include/exclude filters to regular expressions
         self.include_list = RepositoryFilter._build(self, include_list)
