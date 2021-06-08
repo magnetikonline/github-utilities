@@ -4,7 +4,6 @@ import os.path
 import re
 import sys
 
-
 REPOSITORY_FILTER_REGEXP = re.compile(r"^[*/A-Za-z0-9_.-]+$")
 MANDATORY_CONFIG_KEY_SET = {"AUTH_TOKEN", "REPOSITORY_TYPE"}
 CONFIG_FILE = (

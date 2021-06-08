@@ -2,7 +2,6 @@
 
 from lib import common, githubapi
 
-
 ORGANIZATION_CONFIG_KEY = "ORGANIZATION"
 
 

@@ -3,7 +3,6 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-
 API_BASE_URL = "https://api.github.com"
 REQUEST_ACCEPT_VERSION = "application/vnd.github.v3+json"
 REQUEST_USER_AGENT = "magnetikonline/githubutilities 1.0"
