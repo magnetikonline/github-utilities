@@ -10,7 +10,7 @@ MANDATORY_CONFIG_KEY_SET = {"AUTH_TOKEN", "REPOSITORY_TYPE"}
 CONFIG_FILE = (
     os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + "/config.json"
 )
-GITHUB_AUTH_TOKEN_REGEXP = re.compile(r"^[a-f0-9]{40}$")
+GITHUB_AUTH_TOKEN_REGEXP = re.compile(r"^[a-zA-Z0-9_]{40}$")
 
 
 def _exit_error(message):
