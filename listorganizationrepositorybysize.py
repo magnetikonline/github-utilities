@@ -31,7 +31,6 @@ def organization_repository_size_sorted_list(
 def main():
     # load config from file
     config_data = common.load_config(config_key_addition_set={ORGANIZATION_CONFIG_KEY})
-
     config_auth_token = config_data["AUTH_TOKEN"]
 
     # fetch repository names/sizes of the specified type

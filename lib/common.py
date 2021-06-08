@@ -25,7 +25,7 @@ def read_arguments():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        "--commit", action="store_true", help="apply changes, otherwise dry run only"
+        "--commit", action="store_true", help="apply changes, otherwise dry run"
     )
 
     parser.add_argument(
