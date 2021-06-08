@@ -60,9 +60,9 @@ def _request(auth_token, api_path, method=None, parameter_collection=None):
     # make the request
     try:
         response = urllib.request.urlopen(request)
-    except urllib.error.HTTPError as e:
+    except urllib.error.HTTPError as err:
         # re-raise as API error
-        raise APIRequestError(e.code, e.read())  # HTTP code  # error message
+        raise APIRequestError(err.code, err.read())  # HTTP code  # error message
     else:
         # parse JSON response and return
         response_data = json.load(response)

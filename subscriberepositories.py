@@ -20,9 +20,9 @@ def repository_name_set(auth_token, repository_type, repository_filter):
             print(repository_name)
             repository_set.add(repository_name)
 
-    except githubapi.APIRequestError as e:
+    except githubapi.APIRequestError as err:
         common.github_api_exit_error(
-            f"Unable to fetch repository list for type {repository_type}.", e
+            f"Unable to fetch repository list for type {repository_type}.", err
         )
 
     return repository_set
@@ -39,8 +39,8 @@ def repository_subscription_name_set(auth_token):
             print(repository_name)
             subscription_set.add(repository_name)
 
-    except githubapi.APIRequestError as e:
-        common.github_api_exit_error("Unable to fetch subscription list.", e)
+    except githubapi.APIRequestError as err:
+        common.github_api_exit_error("Unable to fetch subscription list.", err)
 
     return subscription_set
 
@@ -54,9 +54,9 @@ def set_respository_subscription(auth_token, repository_full_name):
             auth_token, owner, repository, subscribed=True
         )
 
-    except githubapi.APIRequestError as e:
+    except githubapi.APIRequestError as err:
         common.github_api_exit_error(
-            f"Unable to set subscription for repository {owner}/{repository}.", e
+            f"Unable to set subscription for repository {owner}/{repository}.", err
         )
 
 

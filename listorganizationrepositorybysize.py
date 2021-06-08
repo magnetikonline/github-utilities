@@ -18,10 +18,10 @@ def organization_repository_size_sorted_list(
                 (str(repository_item["git_url"]), int(repository_item["size"]))
             )
 
-    except githubapi.APIRequestError as e:
+    except githubapi.APIRequestError as err:
         common.github_api_exit_error(
             f"Unable to fetch repository list for organization {organization_name}, type {repository_type}.",
-            e,
+            err,
         )
 
     # sort list by repository size descending

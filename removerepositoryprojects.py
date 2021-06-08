@@ -21,9 +21,9 @@ def repository_name_projects_status_set(auth_token, repository_type, repository_
             print(name + (" - Projects enabled" if (has_projects) else ""))
             repository_set.add((name, has_projects))
 
-    except githubapi.APIRequestError as e:
+    except githubapi.APIRequestError as err:
         common.github_api_exit_error(
-            f"Unable to fetch repository list for type {repository_type}.", e
+            f"Unable to fetch repository list for type {repository_type}.", err
         )
 
     return repository_set
@@ -42,9 +42,9 @@ def disable_repository_projects(auth_token, repository_name):
             auth_token, owner, repository, projects=False
         )
 
-    except githubapi.APIRequestError as e:
+    except githubapi.APIRequestError as err:
         common.github_api_exit_error(
-            f"Unable to disable projects for repository {owner}/{repository}.", e
+            f"Unable to disable projects for repository {owner}/{repository}.", err
         )
 
 
