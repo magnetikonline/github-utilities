@@ -1,6 +1,6 @@
 # GitHub utilities
 
-Random scripts for working with GitHub itself and repositories. All designed for Python 3.7+.
+Random scripts for working with GitHub itself and repositories. All designed for Python 3.8+.
 
 - [Utilities](#utilities)
 	- [listorganizationrepositorybysize.py](#listorganizationrepositorybysizepy)
@@ -42,6 +42,7 @@ Random scripts for working with GitHub itself and repositories. All designed for
 ## Configuration
 
 All settings contained in a single [`config.json`](config.json). A breakdown of each setting follows:
+
 - `AUTH_TOKEN` - a valid GitHub token ID, generated via the [Personal access tokens](https://github.com/settings/tokens) page. Token requires full access to the `repo` scope and it's sub-scopes:
 
 	![Personal access token permissions](https://user-images.githubusercontent.com/1818757/117104375-59b00a00-adbf-11eb-8b59-2f880aceac3f.png)
