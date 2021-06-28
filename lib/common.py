@@ -1,15 +1,16 @@
 import argparse
 import json
-import os.path
+import os
 import re
 import sys
 
+GITHUB_AUTH_TOKEN_KEY_NAME = "AUTH_TOKEN"
+GITHUB_AUTH_TOKEN_REGEXP = re.compile(r"^[a-zA-Z0-9_]{40}$")
 REPOSITORY_FILTER_REGEXP = re.compile(r"^[*/A-Za-z0-9_.-]+$")
-MANDATORY_CONFIG_KEY_SET = {"AUTH_TOKEN", "REPOSITORY_TYPE"}
+MANDATORY_CONFIG_KEY_SET = {GITHUB_AUTH_TOKEN_KEY_NAME, "REPOSITORY_TYPE"}
 CONFIG_FILE = (
     os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + "/config.json"
 )
-GITHUB_AUTH_TOKEN_REGEXP = re.compile(r"^[a-zA-Z0-9_]{40}$")
 
 
 def _exit_error(message):
@@ -62,7 +63,9 @@ def read_arguments():
 
 
 def load_config(config_key_addition_set=set()):
+    # build full config key set - attempt to pull auth token from env var
     config_key_set = MANDATORY_CONFIG_KEY_SET.union(config_key_addition_set)
+    env_auth_token = os.environ.get(GITHUB_AUTH_TOKEN_KEY_NAME)
 
     # does config exist?
     if not os.path.isfile(CONFIG_FILE):
@@ -74,17 +77,28 @@ def load_config(config_key_addition_set=set()):
     fp.close()
 
     for config_key in config_key_set:
+        if (config_key == GITHUB_AUTH_TOKEN_KEY_NAME) and (env_auth_token is not None):
+            # GitHub auth token from environment variable, not config file - skip check
+            continue
+
         # config keys exist?
         if config_key not in config_data:
-            _exit_error(f"Unable to find [{config_key}] config key in [{CONFIG_FILE}]")
+            _exit_error(
+                f"Unable to locate [{config_key}] config key in [{CONFIG_FILE}]"
+            )
 
         # ensure value is not empty
         if not config_data[config_key].strip():
             _exit_error(f"Config key [{config_key}] is empty")
 
     # validate auth token format
-    if not GITHUB_AUTH_TOKEN_REGEXP.search(config_data["AUTH_TOKEN"]):
-        _exit_error("Invalid GitHub authorization token specified in config")
+    if env_auth_token is not None:
+        config_data[GITHUB_AUTH_TOKEN_KEY_NAME] = env_auth_token
+
+    if not GITHUB_AUTH_TOKEN_REGEXP.search(config_data[GITHUB_AUTH_TOKEN_KEY_NAME]):
+        _exit_error(
+            "Invalid GitHub authorization token specified in config or environment variable"
+        )
 
     # return expected config items from config data
     return {

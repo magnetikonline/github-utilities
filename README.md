@@ -47,6 +47,8 @@ All settings contained in a single [`config.json`](config.json). A breakdown of 
 
 	![Personal access token permissions](https://user-images.githubusercontent.com/1818757/117104375-59b00a00-adbf-11eb-8b59-2f880aceac3f.png)
 
+	Alternatively, the token value can be supplied via a `AUTH_TOKEN` environment variable.
+
 - `ORGANIZATION` - where required, specifies the organization to use for repository fetch.
 - `REPOSITORY_TYPE` - when repositories are fetched - defines the context/association to to user to use.
 
