@@ -5,7 +5,7 @@ import re
 import sys
 
 GITHUB_AUTH_TOKEN_KEY_NAME = "AUTH_TOKEN"
-GITHUB_AUTH_TOKEN_REGEXP = re.compile(r"^[a-zA-Z0-9_]{40}$")
+GITHUB_AUTH_TOKEN_REGEXP = re.compile(r"^gh[a-z]_[a-zA-Z0-9_]{36}$")
 REPOSITORY_FILTER_REGEXP = re.compile(r"^[*/A-Za-z0-9_.-]+$")
 MANDATORY_CONFIG_KEY_SET = {GITHUB_AUTH_TOKEN_KEY_NAME, "REPOSITORY_TYPE"}
 CONFIG_FILE = (
