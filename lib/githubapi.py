@@ -119,14 +119,14 @@ def _request_paged(
         request_page = request_page + 1
 
 
-# info: https://developer.github.com/v3/repos/#list-your-repositories
+# info: https://docs.github.com/en/rest/reference/repos#list-repositories-for-the-authenticated-user
 def user_repository_list(auth_token: str, repository_type: str) -> List[Dict[str, Any]]:
     return _request_paged(
         auth_token, "user/repos", parameter_collection={"type": repository_type}
     )
 
 
-# info: https://developer.github.com/v3/repos/#list-organization-repositories
+# info: https://docs.github.com/en/rest/reference/repos#list-organization-repositories
 def organization_repository_list(
     auth_token: str, organization_name: str, repository_type: str
 ) -> List[Dict[str, Any]]:
@@ -137,7 +137,7 @@ def organization_repository_list(
     )
 
 
-# info: https://developer.github.com/v3/repos/#edit
+# info: https://docs.github.com/en/rest/reference/repos#update-a-repository
 def update_repository_properties(
     auth_token: str,
     owner: str,
@@ -174,12 +174,12 @@ def update_repository_properties(
     )
 
 
-# info: https://developer.github.com/v3/activity/watching/#list-repositories-being-watched
+# info: https://docs.github.com/en/rest/reference/activity#list-repositories-watched-by-the-authenticated-user
 def user_subscription_list(auth_token: str) -> List[Dict[str, Any]]:
     return _request_paged(auth_token, "user/subscriptions")
 
 
-# info: https://developer.github.com/v3/activity/watching/#get-a-repository-subscription
+# info: https://docs.github.com/en/rest/reference/activity#get-a-repository-subscription
 def user_repository_subscription(auth_token: str, owner: str, repository: str) -> Any:
     return _request(
         auth_token,
@@ -187,7 +187,7 @@ def user_repository_subscription(auth_token: str, owner: str, repository: str) -
     )
 
 
-# info: https://developer.github.com/v3/activity/watching/#set-a-repository-subscription
+# info: https://docs.github.com/en/rest/reference/activity#set-a-repository-subscription
 def set_user_repository_subscription(
     auth_token: str,
     owner: str,
