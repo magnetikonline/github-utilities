@@ -2,6 +2,7 @@ import json
 import urllib.error
 import urllib.parse
 import urllib.request
+from typing import Any, Callable, Dict, Generator, List, Union
 
 API_BASE_URL = "https://api.github.com"
 REQUEST_ACCEPT_VERSION = "application/vnd.github.v3+json"
@@ -11,15 +12,20 @@ REQUEST_PAGE_SIZE = 20
 
 
 class APIRequestError(Exception):
-    def __init__(self, http_code=None, response=None):
+    def __init__(self, http_code: int, response: str):
         # error HTTP code and response body
-        self.http_code = int(http_code)
+        self.http_code = http_code
         self.response = response
 
         super(APIRequestError, self).__init__()
 
 
-def _request(auth_token, api_path, method=None, parameter_collection=None):
+def _request(
+    auth_token: str,
+    api_path: str,
+    method: Union[str, None] = None,
+    parameter_collection: Union[Dict[str, Union[bool, str]], None] = None,
+) -> Any:
     # build base request URL/headers
     request_url = f"{API_BASE_URL}/{api_path}"
     header_collection = {
@@ -42,7 +48,7 @@ def _request(auth_token, api_path, method=None, parameter_collection=None):
         request = urllib.request.Request(headers=header_collection, url=request_url)
     else:
         # other method types (POST/PATCH/PUT/DELETE)
-        data_send = None
+        data_send = ""
         if parameter_collection is not None:
             # convert parameter collection to JSON - sent with request
             data_send = json.dumps(parameter_collection, separators=(",", ":"))
@@ -51,7 +57,7 @@ def _request(auth_token, api_path, method=None, parameter_collection=None):
             header_collection["Content-Type"] = REQUEST_DATA_CONTENT_TYPE
 
         request = urllib.request.Request(
-            data=bytes(data_send, "ascii"),
+            data=None if (data_send == "") else bytes(data_send, "ascii"),
             headers=header_collection,
             method=method,
             url=request_url,
@@ -62,7 +68,7 @@ def _request(auth_token, api_path, method=None, parameter_collection=None):
         response = urllib.request.urlopen(request)
     except urllib.error.HTTPError as err:
         # re-raise as API error
-        raise APIRequestError(err.code, err.read())  # HTTP code  # error message
+        raise APIRequestError(err.code, str(err.read()))  # HTTP code and error message
     else:
         # parse JSON response and return
         response_data = json.load(response)
@@ -71,23 +77,32 @@ def _request(auth_token, api_path, method=None, parameter_collection=None):
         return response_data
 
 
-def _request_paged(auth_token, api_path, parameter_collection={}, item_processor=None):
-    # init initial request page
-    request_page = 1
-    active = True
-
-    # set a default item processor function, if none given
-    def default_item_processor(response_data):
+def _request_paged(
+    auth_token: str,
+    api_path: str,
+    parameter_collection: Dict[str, Union[bool, str]] = {},
+    item_processor: Union[
+        Callable[[List[Any]], Generator[Any, None, None]], None
+    ] = None,
+) -> Any:
+    # init a default item processor function, if none given
+    def default_item_processor(response_data: List[Any]) -> Generator[Any, None, None]:
         for response_item in response_data:
             yield response_item
 
     if item_processor is None:
         item_processor = default_item_processor
 
+    # init initial request page
+    request_page = 1
+    active = True
+
     while active:
         # build paging parameters - merged with base request parameters
         parameter_paged_collection = parameter_collection.copy()
-        parameter_paged_collection.update(page=request_page, per_page=REQUEST_PAGE_SIZE)
+        parameter_paged_collection.update(
+            page=str(request_page), per_page=str(REQUEST_PAGE_SIZE)
+        )
 
         # make API request
         response_data = _request(
@@ -105,38 +120,40 @@ def _request_paged(auth_token, api_path, parameter_collection={}, item_processor
 
 
 # info: https://developer.github.com/v3/repos/#list-your-repositories
-def user_repository_list(auth_token, repository_type):
+def user_repository_list(auth_token: str, repository_type: str) -> List[Dict[str, Any]]:
     return _request_paged(
         auth_token, "user/repos", parameter_collection={"type": repository_type}
     )
 
 
 # info: https://developer.github.com/v3/repos/#list-organization-repositories
-def organization_repository_list(auth_token, organization_name, repository_type):
+def organization_repository_list(
+    auth_token: str, organization_name: str, repository_type: str
+) -> List[Dict[str, Any]]:
     return _request_paged(
         auth_token,
-        f"orgs/{organization_name}/repos",
+        f"orgs/{urllib.parse.quote(organization_name)}/repos",
         parameter_collection={"type": repository_type},
     )
 
 
 # info: https://developer.github.com/v3/repos/#edit
 def update_repository_properties(
-    auth_token,
-    owner,
-    repository,
-    default_branch=None,
-    description=None,
-    homepage=None,
-    issues=None,
-    private=None,
-    projects=None,
-    wiki=None,
-):
+    auth_token: str,
+    owner: str,
+    repository: str,
+    default_branch: Union[str, None] = None,
+    description: Union[str, None] = None,
+    homepage: Union[str, None] = None,
+    issues: Union[str, None] = None,
+    private: Union[str, None] = None,
+    projects: Union[bool, None] = None,
+    wiki: Union[bool, None] = None,
+) -> Any:
     # build up request collection from given arguments
-    patch_collection = {"name": repository}
+    patch_collection: Dict[str, Union[bool, str]] = {"name": repository}
 
-    def add_property(param, key):
+    def add_property(param: Union[bool, str, None], key: str) -> None:
         if param is not None:
             patch_collection[key] = param
 
@@ -158,12 +175,12 @@ def update_repository_properties(
 
 
 # info: https://developer.github.com/v3/activity/watching/#list-repositories-being-watched
-def user_subscription_list(auth_token):
+def user_subscription_list(auth_token: str) -> List[Dict[str, Any]]:
     return _request_paged(auth_token, "user/subscriptions")
 
 
 # info: https://developer.github.com/v3/activity/watching/#get-a-repository-subscription
-def user_repository_subscription(auth_token, owner, repository):
+def user_repository_subscription(auth_token: str, owner: str, repository: str) -> Any:
     return _request(
         auth_token,
         f"repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repository)}/subscription",
@@ -172,8 +189,12 @@ def user_repository_subscription(auth_token, owner, repository):
 
 # info: https://developer.github.com/v3/activity/watching/#set-a-repository-subscription
 def set_user_repository_subscription(
-    auth_token, owner, repository, subscribed=False, ignored=False
-):
+    auth_token: str,
+    owner: str,
+    repository: str,
+    subscribed: bool = False,
+    ignored: bool = False,
+) -> Any:
     return _request(
         auth_token,
         f"repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repository)}/subscription",

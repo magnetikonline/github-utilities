@@ -1,17 +1,21 @@
 #!/usr/bin/env python3
 
+from typing import Set, Tuple
+
 from lib import common, githubapi
 
 
-def repository_name_wiki_status_set(auth_token, repository_type, repository_filter):
-    repository_set = set()
+def repository_name_wiki_status_set(
+    auth_token: str, repository_type: str, repository_filter: common.RepositoryFilter
+) -> Set[Tuple[str, bool]]:
+    repository_set: Set[Tuple[str, bool]] = set()
 
     try:
         for repository_item in githubapi.user_repository_list(
             auth_token, repository_type
         ):
             name = repository_item["full_name"]
-            has_wiki = repository_item["has_wiki"]
+            has_wiki = bool(repository_item["has_wiki"])
 
             # include/exclude repository?
             if not repository_filter.accept(name):
@@ -29,11 +33,11 @@ def repository_name_wiki_status_set(auth_token, repository_type, repository_filt
     return repository_set
 
 
-def filter_repository_wiki_enabled(repository_set):
+def filter_repository_wiki_enabled(repository_set: Set[Tuple[str, bool]]) -> Set[str]:
     return {name for name, has_wiki in repository_set if has_wiki}
 
 
-def disable_repository_wiki(auth_token, repository_name):
+def disable_repository_wiki(auth_token: str, repository_name: str) -> None:
     # split repository into owner/repository parts
     owner, repository = repository_name.split("/")
 

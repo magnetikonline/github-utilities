@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 
+from typing import Set
+
 from lib import common, githubapi
 
 
-def repository_name_set(auth_token, repository_type, repository_filter):
-    repository_set = set()
+def repository_name_set(
+    auth_token: str, repository_type: str, repository_filter: common.RepositoryFilter
+) -> Set[str]:
+    repository_set: Set[str] = set()
 
     try:
         for repository_item in githubapi.user_repository_list(
@@ -28,8 +32,8 @@ def repository_name_set(auth_token, repository_type, repository_filter):
     return repository_set
 
 
-def repository_subscription_name_set(auth_token):
-    subscription_set = set()
+def repository_subscription_name_set(auth_token: str) -> Set[str]:
+    subscription_set: Set[str] = set()
 
     try:
         for subscription_item in githubapi.user_subscription_list(auth_token):
@@ -45,9 +49,9 @@ def repository_subscription_name_set(auth_token):
     return subscription_set
 
 
-def set_respository_subscription(auth_token, repository_full_name):
+def set_respository_subscription(auth_token: str, repository_name: str) -> None:
     # split repository into owner/repository parts
-    owner, repository = repository_full_name.split("/")
+    owner, repository = repository_name.split("/")
 
     try:
         githubapi.set_user_repository_subscription(

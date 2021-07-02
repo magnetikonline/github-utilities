@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 
+from typing import List, Tuple
+
 from lib import common, githubapi
 
 ORGANIZATION_CONFIG_KEY = "ORGANIZATION"
 
 
 def organization_repository_size_sorted_list(
-    auth_token, organization_name, repository_type
-):
-    repository_list = []
+    auth_token: str, organization_name: str, repository_type: str
+) -> List[Tuple[str, int]]:
+    repository_list: List[Tuple[str, int]] = []
 
     try:
         for repository_item in githubapi.organization_repository_list(
@@ -24,7 +26,7 @@ def organization_repository_size_sorted_list(
             err,
         )
 
-    # sort list by repository size descending
+    # sort by repository size descending
     return sorted(repository_list, key=lambda item: item[1], reverse=True)
 
 
