@@ -4,6 +4,7 @@ Random scripts for working with GitHub itself and repositories. All designed for
 
 - [Utilities](#utilities)
 	- [listorganizationrepositorybysize.py](#listorganizationrepositorybysizepy)
+	- [listorganizationrepositorywebhooks.py](#listorganizationrepositorywebhookspy)
 	- [removerepositorywiki.py](#removerepositorywikipy)
 	- [removerepositoryprojects.py](#removerepositoryprojectspy)
 	- [subscriberepositories.py](#subscriberepositoriespy)
@@ -17,6 +18,11 @@ Random scripts for working with GitHub itself and repositories. All designed for
 
 - Fetches all repositories for a given `ORGANIZATION`, ordered in descending size order.
 - Emits results to the console as tab separated repository/size (kilobytes) lines.
+
+### [`listorganizationrepositorywebhooks.py`](listorganizationrepositorywebhooks.py)
+
+- Returns all repositories for a given `ORGANIZATION` containing one or more webhooks.
+- Emits results to the console as repository lines and tab indented webhook URLs.
 
 ### [`removerepositorywiki.py`](removerepositorywiki.py)
 

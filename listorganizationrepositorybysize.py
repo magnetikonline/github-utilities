@@ -43,9 +43,9 @@ def main():
         config_data["REPOSITORY_TYPE"],
     )
 
-    # output list, repository URI/size - tab separated
-    for repository_uri, repository_size in repository_list:
-        print(f"{repository_uri}\t{repository_size}")
+    # output list, repository URL/size - tab separated
+    for repository_url, repository_size in repository_list:
+        print(f"{repository_url}\t{repository_size}")
 
 
 if __name__ == "__main__":

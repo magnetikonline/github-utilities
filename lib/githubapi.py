@@ -180,7 +180,7 @@ def user_subscription_list(auth_token: str) -> List[Dict[str, Any]]:
 
 
 # info: https://docs.github.com/en/rest/reference/activity#get-a-repository-subscription
-def user_repository_subscription(auth_token: str, owner: str, repository: str) -> Any:
+def repository_subscription(auth_token: str, owner: str, repository: str) -> Any:
     return _request(
         auth_token,
         f"repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repository)}/subscription",
@@ -200,4 +200,14 @@ def set_user_repository_subscription(
         f"repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repository)}/subscription",
         method="PUT",
         parameter_collection={"subscribed": subscribed, "ignored": ignored},
+    )
+
+
+# info: https://docs.github.com/en/rest/reference/repos#list-repository-webhooks
+def repository_webhook_list(
+    auth_token: str, owner: str, repository: str
+) -> List[Dict[str, Any]]:
+    return _request(
+        auth_token,
+        f"repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repository)}/hooks",
     )
