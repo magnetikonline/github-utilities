@@ -58,9 +58,8 @@ def read_arguments() -> Tuple[bool, List[str], List[str]]:
 
     # return arguments
     return (
-        not arg_list.commit,  # 'dry run' mode
-        # if no include filters, add the default of 'everything'
-        ["*"] if (arg_list.include is None) else arg_list.include,
+        not arg_list.commit,  # 'dry run' mode?
+        [] if (arg_list.include is None) else arg_list.include,
         [] if (arg_list.exclude is None) else arg_list.exclude,
     )
 
@@ -122,6 +121,10 @@ class RepositoryFilter:
             return False
 
         # if include match - accept
+        if len(self.include_list) < 1:
+            # if no include filters, then accept by default
+            return True
+
         if RepositoryFilter._is_match(self, self.include_list, name):
             return True
 
