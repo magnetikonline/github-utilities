@@ -21,7 +21,7 @@ class APIRequestError(Exception):
 
 
 def _request(
-    auth_token: str,
+    auth_token: Union[str, None],
     api_path: str,
     method: Union[str, None] = None,
     parameter_collection: Union[Dict[str, Union[bool, str]], None] = None,

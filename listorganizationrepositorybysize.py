@@ -17,7 +17,7 @@ def organization_repository_size_sorted_list(
             auth_token, organization_name, repository_type
         ):
             repository_list.append(
-                (str(repository_item["git_url"]), int(repository_item["size"]))
+                (repository_item["git_url"], int(repository_item["size"]))
             )
 
     except githubapi.APIRequestError as err:
