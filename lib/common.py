@@ -3,7 +3,7 @@ import json
 import os
 import re
 import sys
-from typing import Dict, List, Set, Tuple, Union
+from typing import Any, Dict, List, Set, Tuple, Union
 
 from lib import githubapi
 
@@ -69,14 +69,15 @@ def load_config(config_key_addition_set: Set[str] = set()) -> Dict[str, str]:
     config_key_set = MANDATORY_CONFIG_KEY_SET.union(config_key_addition_set)
     env_auth_token = os.environ.get(GITHUB_AUTH_TOKEN_KEY_NAME)
 
-    # does config exist?
-    if not os.path.isfile(CONFIG_FILE):
-        _exit_error(f"Unable to load {CONFIG_FILE}")
-
     # open and parse JSON config
-    fp = open(CONFIG_FILE, "rb")
-    config_data = json.load(fp)
-    fp.close()
+    config_data: dict[Any, Any] = {}
+    try:
+        fp = open(CONFIG_FILE, "rb")
+        config_data = json.load(fp)
+        fp.close()
+    except FileNotFoundError:
+        # config file not found
+        _exit_error(f"Unable to load {CONFIG_FILE}")
 
     for config_key in config_key_set:
         if (config_key == GITHUB_AUTH_TOKEN_KEY_NAME) and (env_auth_token is not None):
