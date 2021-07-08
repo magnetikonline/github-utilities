@@ -24,7 +24,7 @@ def _request(
     auth_token: Union[str, None],
     api_path: str,
     method: Union[str, None] = None,
-    parameter_collection: Union[Dict[str, Union[bool, str]], None] = None,
+    parameter_collection: Dict[str, Union[bool, str]] = {},
 ) -> Any:
     # build base request URL/headers
     request_url = f"{API_BASE_URL}/{api_path}"
@@ -40,7 +40,7 @@ def _request(
     if method is None:
         # GET method
         # add request parameters as URL querystring items
-        if parameter_collection is not None:
+        if parameter_collection:
             request_url = (
                 f"{request_url}?{urllib.parse.urlencode(parameter_collection)}"
             )
@@ -49,7 +49,7 @@ def _request(
     else:
         # other method types (POST/PATCH/PUT/DELETE)
         data_send = ""
-        if parameter_collection is not None:
+        if parameter_collection:
             # convert parameter collection to JSON - sent with request
             data_send = json.dumps(parameter_collection, separators=(",", ":"))
 
