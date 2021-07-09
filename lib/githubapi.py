@@ -119,6 +119,10 @@ def _request_paged(
         request_page += 1
 
 
+def _urlquote(value: str) -> str:
+    return urllib.parse.quote(value)
+
+
 # info: https://docs.github.com/en/rest/reference/repos#list-repositories-for-the-authenticated-user
 def user_repository_list(auth_token: str, repository_type: str) -> List[Dict[str, Any]]:
     return _request_paged(
@@ -132,7 +136,7 @@ def organization_repository_list(
 ) -> List[Dict[str, Any]]:
     return _request_paged(
         auth_token,
-        f"orgs/{urllib.parse.quote(organization_name)}/repos",
+        f"orgs/{_urlquote(organization_name)}/repos",
         parameter_collection={"type": repository_type},
     )
 
@@ -168,7 +172,7 @@ def update_repository_properties(
     # update repository
     return _request(
         auth_token,
-        f"repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repository)}",
+        f"repos/{_urlquote(owner)}/{_urlquote(repository)}",
         method="PATCH",
         parameter_collection=patch_collection,
     )
@@ -183,7 +187,7 @@ def user_subscription_list(auth_token: str) -> List[Dict[str, Any]]:
 def repository_subscription(auth_token: str, owner: str, repository: str) -> Any:
     return _request(
         auth_token,
-        f"repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repository)}/subscription",
+        f"repos/{_urlquote(owner)}/{_urlquote(repository)}/subscription",
     )
 
 
@@ -197,7 +201,7 @@ def set_user_repository_subscription(
 ) -> Any:
     return _request(
         auth_token,
-        f"repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repository)}/subscription",
+        f"repos/{_urlquote(owner)}/{_urlquote(repository)}/subscription",
         method="PUT",
         parameter_collection={"subscribed": subscribed, "ignored": ignored},
     )
@@ -209,5 +213,5 @@ def repository_webhook_list(
 ) -> List[Dict[str, Any]]:
     return _request(
         auth_token,
-        f"repos/{urllib.parse.quote(owner)}/{urllib.parse.quote(repository)}/hooks",
+        f"repos/{_urlquote(owner)}/{_urlquote(repository)}/hooks",
     )
