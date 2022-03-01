@@ -74,15 +74,15 @@ Certain scripts allow control of repository scope via `--include` and `--exclude
 ```sh
 # matches "user/one" and "user/two" but not "user/one_two" or "user/three"
 ./script.py \
-	--include "u*/one" \
-	--include "u*/two"
+  --include "u*/one" \
+  --include "u*/two"
 
 # matches "organization/*" but not "organization/skip_me"
 ./script.py \
-	--include "organization/*" \
-	--exclude "*/skip_me"
+  --include "organization/*" \
+  --exclude "*/skip_me"
 
 # will match everything except "user/avoid"
 ./script.py \
-	--exclude "user/avoid"
+  --exclude "user/avoid"
 ```
