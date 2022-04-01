@@ -58,7 +58,7 @@ All settings contained in a single [`config.json`](config.json). A breakdown of 
 - `ORGANIZATION` - where required, specifies the organization to use for repository fetch.
 - `REPOSITORY_TYPE` - when repositories are fetched - defines the context/association to to user to use.
 
-	Valid options [are listed here](https://docs.github.com/en/rest/reference/repos#list-your-repositories) with `owner` more than likely what you're after.
+	Valid options [are listed here](https://docs.github.com/en/rest/reference/repos#list-organization-repositories) with `member` more than likely what you're after.
 
 ## Filter arguments
 
