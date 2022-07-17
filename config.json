@@ -1,5 +1,5 @@
 {
 	"AUTH_TOKEN": "AUTH_TOKEN",
 	"ORGANIZATION": "",
-	"REPOSITORY_TYPE": "member"
+	"REPOSITORY_TYPE": "owner"
 }

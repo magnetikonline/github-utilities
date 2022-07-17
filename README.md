@@ -52,13 +52,12 @@ All settings contained in a single [`config.json`](config.json). A breakdown of 
 - `AUTH_TOKEN` - a valid GitHub token ID, generated via the [Personal access tokens](https://github.com/settings/tokens) page. Token requires full access to the `repo` scope and it's sub-scopes:
 
 	![Personal access token permissions](https://user-images.githubusercontent.com/1818757/117104375-59b00a00-adbf-11eb-8b59-2f880aceac3f.png)
-
 	Alternatively, the token value can be supplied via a `AUTH_TOKEN` environment variable.
 
 - `ORGANIZATION` - where required, specifies the organization to use for repository fetch.
 - `REPOSITORY_TYPE` - when repositories are fetched - defines the context/association to to user to use.
 
-	Valid options [are listed here](https://docs.github.com/en/rest/reference/repos#list-organization-repositories) with `member` more than likely what you're after.
+	Valid options [are listed here](https://docs.github.com/en/rest/reference/repos#list-organization-repositories) and [here](https://docs.github.com/en/rest/repos/repos#list-repositories-for-the-authenticated-user) with `member` or `owner` more than likely what you're after.
 
 ## Filter arguments
 
