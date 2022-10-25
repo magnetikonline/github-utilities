@@ -3,7 +3,7 @@ import json
 import os
 import re
 import sys
-from typing import Any, Dict, List, Set, Tuple, Union
+from typing import Any, Union
 
 from lib import githubapi
 
@@ -25,7 +25,7 @@ def github_api_exit_error(message: str, api_request_error: githubapi.APIRequestE
     _exit_error(f"{message} HTTP code: {api_request_error.http_code}")
 
 
-def read_arguments() -> Tuple[bool, List[str], List[str]]:
+def read_arguments() -> tuple[bool, list[str], list[str]]:
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
@@ -43,7 +43,7 @@ def read_arguments() -> Tuple[bool, List[str], List[str]]:
     arg_list = parser.parse_args()
 
     # validate repository include/exclude filters
-    def validate_filter_list(filter_type: str, filter_list: Union[List[str], None]):
+    def validate_filter_list(filter_type: str, filter_list: Union[list[str], None]):
         if filter_list is None:
             # no work
             return
@@ -64,7 +64,7 @@ def read_arguments() -> Tuple[bool, List[str], List[str]]:
     )
 
 
-def load_config(config_key_addition_set: Set[str] = set()) -> Dict[str, str]:
+def load_config(config_key_addition_set: set[str] = set()) -> dict[str, str]:
     # build full config key set - attempt to pull auth token from env var
     config_key_set = MANDATORY_CONFIG_KEY_SET.union(config_key_addition_set)
     env_auth_token = os.environ.get(GITHUB_AUTH_TOKEN_KEY_NAME)
@@ -111,7 +111,7 @@ def load_config(config_key_addition_set: Set[str] = set()) -> Dict[str, str]:
 
 
 class RepositoryFilter:
-    def __init__(self, include_list: List[str], exclude_list: List[str]):
+    def __init__(self, include_list: list[str], exclude_list: list[str]):
         # convert include/exclude filters to regular expressions
         self.include_list = RepositoryFilter._build(self, include_list)
         self.exclude_list = RepositoryFilter._build(self, exclude_list)
@@ -132,8 +132,8 @@ class RepositoryFilter:
         # otherwise reject
         return False
 
-    def _build(self, source_list: List[str]) -> List[re.Pattern]:
-        build_list: List[re.Pattern] = []
+    def _build(self, source_list: list[str]) -> list[re.Pattern]:
+        build_list: list[re.Pattern] = []
         for filter_item in source_list:
             # escape meta characters, set wildcard/start/end metas
             re_filter = re.escape(filter_item).replace("\\*", ".+?")
@@ -141,7 +141,7 @@ class RepositoryFilter:
 
         return build_list
 
-    def _is_match(self, filter_list: List[re.Pattern], name: str) -> bool:
+    def _is_match(self, filter_list: list[re.Pattern], name: str) -> bool:
         for item in filter_list:
             if item.search(name):
                 # matched

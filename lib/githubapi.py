@@ -2,7 +2,7 @@ import json
 import urllib.error
 import urllib.parse
 import urllib.request
-from typing import Any, Callable, Dict, Generator, List, Union
+from typing import Any, Callable, Generator, Union
 
 API_BASE_URL = "https://api.github.com"
 REQUEST_ACCEPT_VERSION = "application/vnd.github.v3+json"
@@ -24,7 +24,7 @@ def _request(
     auth_token: Union[str, None],
     api_path: str,
     method: Union[str, None] = None,
-    parameter_collection: Dict[str, Union[bool, str]] = {},
+    parameter_collection: dict[str, Union[bool, str]] = {},
 ) -> Any:
     # build base request URL/headers
     request_url = f"{API_BASE_URL}/{api_path}"
@@ -80,13 +80,13 @@ def _request(
 def _request_paged(
     auth_token: str,
     api_path: str,
-    parameter_collection: Dict[str, Union[bool, str]] = {},
+    parameter_collection: dict[str, Union[bool, str]] = {},
     item_processor: Union[
-        Callable[[List[Any]], Generator[Any, None, None]], None
+        Callable[[list[Any]], Generator[Any, None, None]], None
     ] = None,
 ) -> Any:
     # init a default item processor function, if none given
-    def default_item_processor(response_data: List[Any]) -> Generator[Any, None, None]:
+    def default_item_processor(response_data: list[Any]) -> Generator[Any, None, None]:
         for response_item in response_data:
             yield response_item
 
@@ -124,7 +124,7 @@ def _urlquote(value: str) -> str:
 
 
 # info: https://docs.github.com/en/rest/reference/repos#list-repositories-for-the-authenticated-user
-def user_repository_list(auth_token: str, repository_type: str) -> List[Dict[str, Any]]:
+def user_repository_list(auth_token: str, repository_type: str) -> list[dict[str, Any]]:
     return _request_paged(
         auth_token, "user/repos", parameter_collection={"type": repository_type}
     )
@@ -133,7 +133,7 @@ def user_repository_list(auth_token: str, repository_type: str) -> List[Dict[str
 # info: https://docs.github.com/en/rest/reference/repos#list-organization-repositories
 def organization_repository_list(
     auth_token: str, organization_name: str, repository_type: str
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     return _request_paged(
         auth_token,
         f"orgs/{_urlquote(organization_name)}/repos",
@@ -155,7 +155,7 @@ def update_repository_properties(
     wiki: Union[bool, None] = None,
 ) -> Any:
     # build up request collection from given arguments
-    patch_collection: Dict[str, Union[bool, str]] = {"name": repository}
+    patch_collection: dict[str, Union[bool, str]] = {"name": repository}
 
     def add_property(param: Union[bool, str, None], key: str) -> None:
         if param is not None:
@@ -179,7 +179,7 @@ def update_repository_properties(
 
 
 # info: https://docs.github.com/en/rest/reference/activity#list-repositories-watched-by-the-authenticated-user
-def user_subscription_list(auth_token: str) -> List[Dict[str, Any]]:
+def user_subscription_list(auth_token: str) -> list[dict[str, Any]]:
     return _request_paged(auth_token, "user/subscriptions")
 
 
@@ -210,7 +210,7 @@ def set_user_repository_subscription(
 # info: https://docs.github.com/en/rest/reference/repos#list-repository-webhooks
 def repository_webhook_list(
     auth_token: str, owner: str, repository: str
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     return _request(
         auth_token,
         f"repos/{_urlquote(owner)}/{_urlquote(repository)}/hooks",

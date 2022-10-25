@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 
-from typing import Set
-
 from lib import common, githubapi
 
 
 def repository_name_set(
     auth_token: str, repository_type: str, repository_filter: common.RepositoryFilter
-) -> Set[str]:
-    repository_set: Set[str] = set()
+) -> set[str]:
+    repository_set: set[str] = set()
 
     try:
         for repository_item in githubapi.user_repository_list(
@@ -32,8 +30,8 @@ def repository_name_set(
     return repository_set
 
 
-def repository_subscription_name_set(auth_token: str) -> Set[str]:
-    subscription_set: Set[str] = set()
+def repository_subscription_name_set(auth_token: str) -> set[str]:
+    subscription_set: set[str] = set()
 
     try:
         for subscription_item in githubapi.user_subscription_list(auth_token):

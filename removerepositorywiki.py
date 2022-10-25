@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 
-from typing import Set, Tuple
-
 from lib import common, githubapi
 
 
 def repository_name_wiki_status_set(
     auth_token: str, repository_type: str, repository_filter: common.RepositoryFilter
-) -> Set[Tuple[str, bool]]:
-    repository_set: Set[Tuple[str, bool]] = set()
+) -> set[tuple[str, bool]]:
+    repository_set: set[tuple[str, bool]] = set()
 
     try:
         for repository_item in githubapi.user_repository_list(
@@ -33,7 +31,7 @@ def repository_name_wiki_status_set(
     return repository_set
 
 
-def filter_repository_wiki_enabled(repository_set: Set[Tuple[str, bool]]) -> Set[str]:
+def filter_repository_wiki_enabled(repository_set: set[tuple[str, bool]]) -> set[str]:
     return {name for name, has_wiki in repository_set if has_wiki}
 
 

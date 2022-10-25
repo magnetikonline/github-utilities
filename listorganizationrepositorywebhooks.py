@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-from typing import List, Tuple
-
 from lib import common, githubapi
 
 ORGANIZATION_CONFIG_KEY = "ORGANIZATION"
@@ -9,8 +7,8 @@ ORGANIZATION_CONFIG_KEY = "ORGANIZATION"
 
 def organization_repository_webhooks_list(
     auth_token: str, organization_name: str, repository_type: str
-) -> List[Tuple[str, List[str]]]:
-    repository_list: List[Tuple[str, List[str]]] = []
+) -> list[tuple[str, list[str]]]:
+    repository_list: list[tuple[str, list[str]]] = []
 
     try:
         for repository_item in githubapi.organization_repository_list(
@@ -18,7 +16,7 @@ def organization_repository_webhooks_list(
         ):
             # split repository into owner/repository parts
             owner, repository = repository_item["full_name"].split("/")
-            webhook_list: List[str] = []
+            webhook_list: list[str] = []
 
             try:
                 for item in githubapi.repository_webhook_list(

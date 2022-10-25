@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-from typing import List, Tuple
-
 from lib import common, githubapi
 
 ORGANIZATION_CONFIG_KEY = "ORGANIZATION"
@@ -9,8 +7,8 @@ ORGANIZATION_CONFIG_KEY = "ORGANIZATION"
 
 def organization_repository_size_sorted_list(
     auth_token: str, organization_name: str, repository_type: str
-) -> List[Tuple[str, int]]:
-    repository_list: List[Tuple[str, int]] = []
+) -> list[tuple[str, int]]:
+    repository_list: list[tuple[str, int]] = []
 
     try:
         for repository_item in githubapi.organization_repository_list(
