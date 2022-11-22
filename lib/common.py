@@ -9,7 +9,7 @@ from lib import githubapi
 
 GITHUB_AUTH_TOKEN_KEY_NAME = "AUTH_TOKEN"
 GITHUB_AUTH_TOKEN_REGEXP = re.compile(
-    r"^(gh[a-z]_[a-zA-Z0-9_]{36}|github_pat_[a-zA-Z0-9]{22}_[a-zA-Z0-9]{59})$"
+    r"^(ghp_[a-zA-Z0-9]{36}|github_pat_[a-zA-Z0-9]{22}_[a-zA-Z0-9]{59})$"
 )
 
 REPOSITORY_FILTER_REGEXP = re.compile(r"^[*/A-Za-z0-9_.-]+$")
