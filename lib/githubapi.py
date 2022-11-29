@@ -5,7 +5,8 @@ import urllib.request
 from typing import Any, Callable, Generator, Union
 
 API_BASE_URL = "https://api.github.com"
-REQUEST_ACCEPT_VERSION = "application/vnd.github.v3+json"
+REQUEST_ACCEPT_VERSION = "application/vnd.github+json"
+REQUEST_API_VERSION = "2022-11-28"
 REQUEST_USER_AGENT = "magnetikonline/githubutilities 1.0"
 REQUEST_DATA_CONTENT_TYPE = "application/json"
 REQUEST_PAGE_SIZE = 20
@@ -31,11 +32,12 @@ def _request(
     header_collection = {
         "Accept": REQUEST_ACCEPT_VERSION,
         "User-Agent": REQUEST_USER_AGENT,
+        "X-GitHub-Api-Version": REQUEST_API_VERSION,
     }
 
     # API request has authorization token present?
     if auth_token is not None:
-        header_collection["Authorization"] = f"token {auth_token}"
+        header_collection["Authorization"] = f"Bearer {auth_token}"
 
     if method is None:
         # GET method
