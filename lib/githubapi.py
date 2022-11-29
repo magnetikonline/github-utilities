@@ -125,14 +125,14 @@ def _urlquote(value: str) -> str:
     return urllib.parse.quote(value)
 
 
-# info: https://docs.github.com/en/rest/reference/repos#list-repositories-for-the-authenticated-user
+# info: https://docs.github.com/en/rest/repos/repos#list-repositories-for-the-authenticated-user
 def user_repository_list(auth_token: str, repository_type: str) -> list[dict[str, Any]]:
     return _request_paged(
         auth_token, "user/repos", parameter_collection={"type": repository_type}
     )
 
 
-# info: https://docs.github.com/en/rest/reference/repos#list-organization-repositories
+# info: https://docs.github.com/en/rest/repos/repos#list-organization-repositories
 def organization_repository_list(
     auth_token: str, organization_name: str, repository_type: str
 ) -> list[dict[str, Any]]:
@@ -143,7 +143,7 @@ def organization_repository_list(
     )
 
 
-# info: https://docs.github.com/en/rest/reference/repos#update-a-repository
+# info: https://docs.github.com/en/rest/repos/repos#update-a-repository
 def update_repository_properties(
     auth_token: str,
     owner: str,
@@ -180,12 +180,12 @@ def update_repository_properties(
     )
 
 
-# info: https://docs.github.com/en/rest/reference/activity#list-repositories-watched-by-the-authenticated-user
+# info: https://docs.github.com/en/rest/activity/watching#list-repositories-watched-by-the-authenticated-user
 def user_subscription_list(auth_token: str) -> list[dict[str, Any]]:
     return _request_paged(auth_token, "user/subscriptions")
 
 
-# info: https://docs.github.com/en/rest/reference/activity#get-a-repository-subscription
+# info: https://docs.github.com/en/rest/activity/watching#get-a-repository-subscription
 def repository_subscription(auth_token: str, owner: str, repository: str) -> Any:
     return _request(
         auth_token,
@@ -193,7 +193,7 @@ def repository_subscription(auth_token: str, owner: str, repository: str) -> Any
     )
 
 
-# info: https://docs.github.com/en/rest/reference/activity#set-a-repository-subscription
+# info: https://docs.github.com/en/rest/activity/watching#set-a-repository-subscription
 def set_user_repository_subscription(
     auth_token: str,
     owner: str,
@@ -209,7 +209,7 @@ def set_user_repository_subscription(
     )
 
 
-# info: https://docs.github.com/en/rest/reference/repos#list-repository-webhooks
+# info: https://docs.github.com/en/rest/webhooks/repos#list-repository-webhooks
 def repository_webhook_list(
     auth_token: str, owner: str, repository: str
 ) -> list[dict[str, Any]]:
