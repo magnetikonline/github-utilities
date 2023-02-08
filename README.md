@@ -1,6 +1,6 @@
 # GitHub utilities
 
-Random scripts for working with GitHub itself and repositories. All designed for Python 3.8+.
+Random scripts for working with GitHub itself and repositories. All designed for Python 3.10+.
 
 - [Utilities](#utilities)
 	- [listorganizationrepositorybysize.py](#listorganizationrepositorybysizepy)

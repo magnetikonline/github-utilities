@@ -2,7 +2,7 @@ import json
 import urllib.error
 import urllib.parse
 import urllib.request
-from typing import Any, Callable, Generator, Union
+from typing import Any, Callable, Generator
 
 API_BASE_URL = "https://api.github.com"
 REQUEST_ACCEPT_VERSION = "application/vnd.github+json"
@@ -22,10 +22,10 @@ class APIRequestError(Exception):
 
 
 def _request(
-    auth_token: Union[str, None],
+    auth_token: str | None,
     api_path: str,
-    method: Union[str, None] = None,
-    parameter_collection: dict[str, Union[bool, str]] = {},
+    method: str | None = None,
+    parameter_collection: dict[str, bool | str] = {},
 ) -> Any:
     # build base request URL/headers
     request_url = f"{API_BASE_URL}/{api_path}"
@@ -82,10 +82,8 @@ def _request(
 def _request_paged(
     auth_token: str,
     api_path: str,
-    parameter_collection: dict[str, Union[bool, str]] = {},
-    item_processor: Union[
-        Callable[[list[Any]], Generator[Any, None, None]], None
-    ] = None,
+    parameter_collection: dict[str, bool | str] = {},
+    item_processor: Callable[[list[Any]], Generator[Any, None, None]] | None = None,
 ) -> Any:
     # init a default item processor function, if none given
     def default_item_processor(response_data: list[Any]) -> Generator[Any, None, None]:
@@ -148,18 +146,18 @@ def update_repository_properties(
     auth_token: str,
     owner: str,
     repository: str,
-    default_branch: Union[str, None] = None,
-    description: Union[str, None] = None,
-    homepage: Union[str, None] = None,
-    issues: Union[str, None] = None,
-    private: Union[str, None] = None,
-    projects: Union[bool, None] = None,
-    wiki: Union[bool, None] = None,
+    default_branch: str | None = None,
+    description: str | None = None,
+    homepage: str | None = None,
+    issues: str | None = None,
+    private: str | None = None,
+    projects: bool | None = None,
+    wiki: bool | None = None,
 ) -> Any:
     # build up request collection from given arguments
-    patch_collection: dict[str, Union[bool, str]] = {"name": repository}
+    patch_collection: dict[str, bool | str] = {"name": repository}
 
-    def add_property(param: Union[bool, str, None], key: str) -> None:
+    def add_property(param: bool | str | None, key: str):
         if param is not None:
             patch_collection[key] = param
 

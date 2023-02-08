@@ -3,7 +3,7 @@ import json
 import os
 import re
 import sys
-from typing import Any, Union
+from typing import Any
 
 from lib import githubapi
 
@@ -46,7 +46,7 @@ def read_arguments() -> tuple[bool, list[str], list[str]]:
     arg_list = parser.parse_args()
 
     # validate repository include/exclude filters
-    def validate_filter_list(filter_type: str, filter_list: Union[list[str], None]):
+    def validate_filter_list(filter_type: str, filter_list: list[str] | None):
         if filter_list is None:
             # no work
             return
