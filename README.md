@@ -64,9 +64,9 @@ All settings contained in a single [`config.json`](config.json). A breakdown of 
 Certain scripts allow control of repository scope via `--include` and `--exclude` arguments, providing the ability to skip over a subset of repositories:
 
 - Valid filter character range is `[/A-Za-z0-9_.-]`, while a wildcard (`*`) will match one or more characters.
-- Filters are tested against the full `user/repository_name` or `organization/repository_name` name.
-- An `--exclude` match will negate any `--include`.
-- If no `--include` filter defined, default is to "match all" (`*`).
+- Filters will be evaluated against a full `user/repository_name` or `organization/repository_name` value.
+- An `--exclude` match will negate any possible `--include` match(es).
+- If no `--include` filter(s) defined, default is to "match all" (e.g. `--include *`).
 
 ### Examples
 
