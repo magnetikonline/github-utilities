@@ -37,7 +37,7 @@ def read_arguments() -> tuple[bool, list[str], list[str]]:
 
     parser.add_argument(
         "--include",
-        help="repository include filter - defaults to 'everything'",
+        help="repository include filter - defaults to '*'",
         nargs="*",
     )
 
@@ -126,14 +126,10 @@ class RepositoryFilter:
 
         # if include match - accept
         if len(self.include_list) < 1:
-            # if no include filters, then accept by default
+            # if no include filters defined then always accept by default
             return True
 
-        if RepositoryFilter._is_match(self, self.include_list, name):
-            return True
-
-        # otherwise reject
-        return False
+        return RepositoryFilter._is_match(self, self.include_list, name)
 
     def _build(self, source_list: list[str]) -> list[re.Pattern]:
         build_list: list[re.Pattern] = []
