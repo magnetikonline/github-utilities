@@ -1,4 +1,8 @@
 {
+	"json.format.keepLines": true,
+	"[json]": {
+		"editor.formatOnSave": true,
+	},
 	"[python]": {
 		"editor.codeActionsOnSave": {
 			"source.organizeImports": true,
