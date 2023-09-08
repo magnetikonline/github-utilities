@@ -1,7 +1,13 @@
 {
+	"json.format.enable": true,
+	"json.format.keepLines": true,
+	"[json][jsonc]": {
+		"editor.formatOnSave": true,
+	},
+
 	"[python]": {
 		"editor.codeActionsOnSave": {
-			"source.organizeImports": true,
+			"source.organizeImports": "explicit",
 		},
 		"editor.defaultFormatter": "ms-python.black-formatter",
 		"editor.formatOnSave": true,
