@@ -18,7 +18,7 @@ class APIRequestError(Exception):
         self.http_code = http_code
         self.response = response
 
-        super(APIRequestError, self).__init__()
+        super().__init__()
 
 
 def _request(
