@@ -2,7 +2,8 @@ import json
 import urllib.error
 import urllib.parse
 import urllib.request
-from typing import Any, Callable, Generator
+from collections.abc import Generator
+from typing import Any, Callable
 
 API_BASE_URL = "https://api.github.com"
 REQUEST_ACCEPT_VERSION = "application/vnd.github+json"
@@ -52,7 +53,7 @@ def _request(
         # other method types (POST/PATCH/PUT/DELETE)
         data_send = ""
         if parameter_collection:
-            # convert parameter collection to JSON - sent with request
+            # convert parameter collection to JSON - sent as request payload
             data_send = json.dumps(parameter_collection, separators=(",", ":"))
 
             # set content type
@@ -83,10 +84,10 @@ def _request_paged(
     auth_token: str,
     api_path: str,
     parameter_collection: dict[str, bool | str] = {},
-    item_processor: Callable[[list[Any]], Generator[Any, None, None]] | None = None,
-) -> Any:
+    item_processor: Callable[[list[Any]], Generator[Any]] | None = None,
+) -> Generator[Any]:
     # init a default item processor function, if none given
-    def default_item_processor(response_data: list[Any]) -> Generator[Any, None, None]:
+    def default_item_processor(response_data: list[Any]) -> Generator[Any]:
         for response_item in response_data:
             yield response_item
 
@@ -124,7 +125,9 @@ def _urlquote(value: str) -> str:
 
 
 # info: https://docs.github.com/en/rest/repos/repos#list-repositories-for-the-authenticated-user
-def user_repository_list(auth_token: str, repository_type: str) -> list[dict[str, Any]]:
+def user_repository_list(
+    auth_token: str, repository_type: str
+) -> Generator[dict[str, Any]]:
     return _request_paged(
         auth_token, "user/repos", parameter_collection={"type": repository_type}
     )
@@ -133,7 +136,7 @@ def user_repository_list(auth_token: str, repository_type: str) -> list[dict[str
 # info: https://docs.github.com/en/rest/repos/repos#list-organization-repositories
 def organization_repository_list(
     auth_token: str, organization_name: str, repository_type: str
-) -> list[dict[str, Any]]:
+) -> Generator[dict[str, Any]]:
     return _request_paged(
         auth_token,
         f"orgs/{_urlquote(organization_name)}/repos",
@@ -179,7 +182,7 @@ def update_repository_properties(
 
 
 # info: https://docs.github.com/en/rest/activity/watching#list-repositories-watched-by-the-authenticated-user
-def user_subscription_list(auth_token: str) -> list[dict[str, Any]]:
+def user_subscription_list(auth_token: str) -> Generator[dict[str, Any]]:
     return _request_paged(auth_token, "user/subscriptions")
 
 
