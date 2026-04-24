@@ -35,7 +35,7 @@ def filter_repository_wiki_enabled(repository_set: set[tuple[str, bool]]) -> set
     return {name for name, has_wiki in repository_set if has_wiki}
 
 
-def disable_repository_wiki(auth_token: str, repository_name: str) -> None:
+def disable_repository_wiki(auth_token: str, repository_name: str):
     # split repository into owner/repository parts
     owner, repository = repository_name.split("/")
 

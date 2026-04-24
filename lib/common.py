@@ -19,7 +19,7 @@ CONFIG_FILE = (
 )
 
 
-def _exit_error(message: str) -> None:
+def _exit_error(message: str):
     print(f"Error: {message}", file=sys.stderr)
     sys.exit(1)
 

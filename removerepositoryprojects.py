@@ -37,7 +37,7 @@ def filter_repository_projects_enabled(
     return {name for name, has_projects in repository_set if has_projects}
 
 
-def disable_repository_projects(auth_token: str, repository_name: str) -> None:
+def disable_repository_projects(auth_token: str, repository_name: str):
     # split repository into owner/repository parts
     owner, repository = repository_name.split("/")
 

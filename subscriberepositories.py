@@ -47,7 +47,7 @@ def repository_subscription_name_set(auth_token: str) -> set[str]:
     return subscription_set
 
 
-def set_respository_subscription(auth_token: str, repository_name: str) -> None:
+def set_respository_subscription(auth_token: str, repository_name: str):
     # split repository into owner/repository parts
     owner, repository = repository_name.split("/")
 
