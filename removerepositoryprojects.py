@@ -32,7 +32,7 @@ def repository_name_projects_status_set(
 
 
 def filter_repository_projects_enabled(
-    repository_set: set[tuple[str, bool]]
+    repository_set: set[tuple[str, bool]],
 ) -> set[str]:
     return {name for name, has_projects in repository_set if has_projects}
 
